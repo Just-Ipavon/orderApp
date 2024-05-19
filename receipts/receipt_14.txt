@@ -1,0 +1,9 @@
+Scontrino
+ID Transazione: 14
+ID Ordine: 1855447841
+ID Tavolo: 4
+Data: 2024-05-19 17:11:28.08
+Metodo di Pagamento: Carta
+Dettagli Ordine:
+Beef Hamburger - Quantità: 1 - Prezzo: $3.8
+Totale: $3.8
