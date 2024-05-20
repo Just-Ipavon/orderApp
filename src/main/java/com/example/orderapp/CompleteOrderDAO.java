@@ -67,6 +67,56 @@ public class CompleteOrderDAO {
         return orders;
     }
 
+    // Nuovo metodo per ottenere gli ordini completati
+    public List<CompleteOrder> getAllCompletedOrders() {
+        List<CompleteOrder> orders = new ArrayList<>();
+        try {
+            dbFacade.openConnection();
+            Connection conn = dbFacade.getConnection();
+            String query = "SELECT po.order_id, po.table_id, po.delivered, po.completed, io.menu_id, io.quantity, m.menu_name, m.menu_price " +
+                    "FROM orders po " +
+                    "JOIN dishes_order io ON po.order_id = io.order_id " +
+                    "JOIN menus m ON io.menu_id = m.menu_id " +
+                    "WHERE po.completed = TRUE " +
+                    "ORDER BY po.order_id";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query);
+                 ResultSet rs = pstmt.executeQuery()) {
+
+                CompleteOrder currentOrder = null;
+                int currentOrderId = -1;
+
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int tableId = rs.getInt("table_id");
+                    boolean delivered = rs.getBoolean("delivered");
+                    boolean completed = rs.getBoolean("completed");
+                    int menuId = rs.getInt("menu_id");
+                    int quantity = rs.getInt("quantity");
+                    String dishName = rs.getString("menu_name");
+                    double dishPrice = rs.getDouble("menu_price");
+
+                    if (currentOrder == null || orderId != currentOrderId) {
+                        currentOrder = new CompleteOrder(orderId, tableId);
+                        currentOrder.setDelivered(delivered);
+                        currentOrder.setCompleted(completed);
+                        orders.add(currentOrder);
+                        currentOrderId = orderId;
+                    }
+
+                    Order order = new Order(menuId, dishName, dishPrice);
+                    order.setQuantity(quantity);
+                    currentOrder.addDish(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            dbFacade.closeConnection();
+        }
+        return orders;
+    }
+
     public void updateOrderStatus(int orderId, boolean delivered) {
         try {
             dbFacade.openConnection();

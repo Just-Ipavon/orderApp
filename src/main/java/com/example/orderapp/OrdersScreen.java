@@ -1,31 +1,30 @@
 package com.example.orderapp;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class OrdersScreen extends Stage implements OrderObserver {
 
-    private final Stage mainStage;
     private VBox mainLayout;
     private final CompleteOrderDAO orderDAO;
     private final DatabaseFacade databaseFacade = new DatabaseFacade();
 
-    public OrdersScreen(Stage mainStage) {
-        this.mainStage = mainStage;
+    public OrdersScreen(Stage primaryStage) {
         this.orderDAO = new CompleteOrderDAO();
-        setTitle("Gestione Ordini");
+        setTitle("Ordini");
 
         mainLayout = new VBox(10);
         mainLayout.setPadding(new Insets(10));
@@ -35,11 +34,20 @@ public class OrdersScreen extends Stage implements OrderObserver {
 
         loadOrders();
 
-        Scene scene = new Scene(scrollPane, 800, 600);
-        setScene(scene);
+        // Creating the button to view paid orders
+        Button paidOrdersButton = new Button("Ordini Pagati");
+        paidOrdersButton.setOnAction(e -> showPaidOrdersScreen(primaryStage));
 
-        // Register this screen as an observer
-        orderDAO.addObserver(this);
+        // Align the button to the bottom right
+        HBox buttonContainer = new HBox(paidOrdersButton);
+        buttonContainer.setAlignment(Pos.BOTTOM_RIGHT);
+        buttonContainer.setPadding(new Insets(10));
+
+        VBox mainContainer = new VBox(scrollPane, buttonContainer);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        Scene scene = new Scene(mainContainer, 800, 600);
+        setScene(scene);
     }
 
     private void loadOrders() {
@@ -53,45 +61,34 @@ public class OrdersScreen extends Stage implements OrderObserver {
                 orderBox.setPadding(new Insets(10));
                 orderBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;");
 
-                CheckBox deliveredCheckbox = new CheckBox("Ordine consegnato");
-                deliveredCheckbox.setSelected(completeOrder.isDelivered());
-                deliveredCheckbox.setOnAction(e -> {
-                    orderDAO.updateOrderStatus(completeOrder.getOrderId(), deliveredCheckbox.isSelected());
-                    // Notify the observer about the status change
-                    onOrderStatusChanged(completeOrder.getOrderId(), deliveredCheckbox.isSelected());
-                });
+                Label orderIdLabel = new Label("ID Ordine: " + completeOrder.getOrderId());
+                Label tableIdLabel = new Label("ID Tavolo: " + completeOrder.getTableId());
+                CheckBox deliveredCheckBox = new CheckBox("Consegnato");
+                deliveredCheckBox.setSelected(completeOrder.isDelivered());
+                deliveredCheckBox.setOnAction(e -> updateOrderStatus(completeOrder.getOrderId(), deliveredCheckBox.isSelected()));
 
-                Button deleteOrderButton = new Button("Cancella Ordine");
-                deleteOrderButton.setOnAction(e -> {
-                    orderDAO.deleteOrder(completeOrder.getOrderId());
-                    // Notify the observer about the order deletion
-                    onOrderDeleted(completeOrder.getOrderId());
-                });
-
-                Button paymentButton = new Button("Procedi al Pagamento");
-                paymentButton.setOnAction(e -> initiatePayment(completeOrder));
-
-                HBox orderHeader = new HBox(10);
-                orderHeader.getChildren().addAll(new Label("ID Ordine: " + completeOrder.getOrderId()), deliveredCheckbox, deleteOrderButton, paymentButton);
-
-                orderBox.getChildren().add(orderHeader);
+                HBox headerBox = new HBox(10);
+                headerBox.getChildren().addAll(orderIdLabel, tableIdLabel, deliveredCheckBox);
+                orderBox.getChildren().add(headerBox);
 
                 for (Order order : completeOrder.getDishes()) {
                     HBox dishBox = new HBox(10);
                     Label dishLabel = new Label("Piatto: " + order.getDishName() + " - Quantità: " + order.getQuantity() + " - Prezzo: $" + order.getDishPrice());
-                    Button deleteDishButton = new Button("Cancella Piatto");
-                    deleteDishButton.setOnAction(e -> {
-                        orderDAO.deleteDish(completeOrder.getOrderId(), order.getMenuId());
-                        // Notify the observer about the dish deletion
-                        onDishDeleted(completeOrder.getOrderId(), order.getMenuId());
-                    });
-
-                    dishBox.getChildren().addAll(dishLabel, deleteDishButton);
+                    Button deleteButton = new Button("Elimina");
+                    deleteButton.setOnAction(e -> deleteDish(completeOrder.getOrderId(), order.getMenuId()));
+                    dishBox.getChildren().addAll(dishLabel, deleteButton);
                     orderBox.getChildren().add(dishBox);
                 }
 
-                Label totalLabel = new Label("Totale: $" + completeOrder.getTotalPrice());
-                orderBox.getChildren().add(totalLabel);
+                Button deleteOrderButton = new Button("Elimina Ordine");
+                deleteOrderButton.setOnAction(e -> deleteOrder(completeOrder.getOrderId()));
+
+                Button payButton = new Button("Paga");
+                payButton.setOnAction(e -> showPaymentDialog(completeOrder.getOrderId(), completeOrder.getTotalPrice(), completeOrder.getTableId()));
+
+                HBox buttonBox = new HBox(10);
+                buttonBox.getChildren().addAll(deleteOrderButton, payButton);
+                orderBox.getChildren().add(buttonBox);
 
                 mainLayout.getChildren().add(orderBox);
             }
@@ -103,145 +100,87 @@ public class OrdersScreen extends Stage implements OrderObserver {
         }
     }
 
-    private void initiatePayment(CompleteOrder completeOrder) {
-        if (!completeOrder.isDelivered()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Attenzione");
-            alert.setHeaderText(null);
-            alert.setContentText("L'ordine non è stato ancora consegnato.");
-            alert.showAndWait();
-            return;
-        }
+    private void updateOrderStatus(int orderId, boolean isDelivered) {
+        orderDAO.updateOrderStatus(orderId, isDelivered);
+        onOrderStatusChanged(orderId, isDelivered);
+    }
 
-        Stage paymentStage = new Stage();
-        paymentStage.setTitle("Procedi al Pagamento");
+    private void deleteOrder(int orderId) {
+        orderDAO.deleteOrder(orderId);
+        onOrderDeleted(orderId);
+    }
 
-        VBox paymentLayout = new VBox(10);
-        paymentLayout.setPadding(new Insets(10));
+    private void deleteDish(int orderId, int menuId) {
+        orderDAO.deleteDish(orderId, menuId);
+        onDishDeleted(orderId, menuId);
+    }
 
-        Label paymentMethodLabel = new Label("Seleziona il metodo di pagamento:");
-        ComboBox<String> paymentMethodComboBox = new ComboBox<>();
-        paymentMethodComboBox.getItems().addAll("Carta", "Contanti");
+    private void showPaymentDialog(int orderId, double totalPrice, int tableId) {
+        Stage dialog = new Stage();
+        dialog.setTitle("Pagamento");
 
-        Label amountReceivedLabel = new Label("Importo ricevuto:");
+        VBox dialogVBox = new VBox(10);
+        dialogVBox.setPadding(new Insets(10));
+
+        Label totalLabel = new Label("Totale: $" + totalPrice);
         TextField amountReceivedField = new TextField();
-        amountReceivedField.setDisable(true);
+        amountReceivedField.setPromptText("Importo ricevuto");
 
-        paymentMethodComboBox.setOnAction(e -> {
-            if ("Contanti".equals(paymentMethodComboBox.getValue())) {
-                amountReceivedField.setDisable(false);
-            } else {
-                amountReceivedField.setDisable(true);
-            }
-        });
+        ComboBox<String> paymentMethodBox = new ComboBox<>();
+        paymentMethodBox.getItems().addAll("Contanti", "Carta di Credito", "Bancomat");
+        paymentMethodBox.setValue("Contanti");
 
-        // Adding the summary of dishes and total price
-        Label orderSummaryLabel = new Label("Riepilogo Ordine:");
-        VBox orderSummaryBox = new VBox(5);
-        for (Order order : completeOrder.getDishes()) {
-            Label dishLabel = new Label("Piatto: " + order.getDishName() + " - Quantità: " + order.getQuantity() + " - Prezzo: $" + order.getDishPrice());
-            orderSummaryBox.getChildren().add(dishLabel);
-        }
-        Label totalLabel = new Label("Totale: $" + completeOrder.getTotalPrice());
-
-        Button confirmButton = new Button("Conferma Pagamento");
-        confirmButton.setOnAction(e -> {
-            String paymentMethod = paymentMethodComboBox.getValue();
-            if (paymentMethod != null) {
-                if ("Contanti".equals(paymentMethod)) {
-                    String amountReceivedStr = amountReceivedField.getText();
-                    if (amountReceivedStr.isEmpty() || !isNumeric(amountReceivedStr)) {
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Attenzione");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Inserisci un importo valido.");
-                        alert.showAndWait();
-                        return;
-                    }
-                    double amountReceived = Double.parseDouble(amountReceivedStr);
-                    processPayment(completeOrder, paymentMethod, amountReceived);
-                } else {
-                    processPayment(completeOrder, paymentMethod, 0);
-                }
-                paymentStage.close();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText(null);
-                alert.setContentText("Seleziona un metodo di pagamento.");
-                alert.showAndWait();
-            }
-        });
-
-        paymentLayout.getChildren().addAll(paymentMethodLabel, paymentMethodComboBox, amountReceivedLabel, amountReceivedField, orderSummaryLabel, orderSummaryBox, totalLabel, confirmButton);
-        Scene scene = new Scene(paymentLayout, 300, 400);
-        paymentStage.setScene(scene);
-        paymentStage.show();
-    }
-
-    private void processPayment(CompleteOrder completeOrder, String paymentMethod, double amountReceived) {
-        try {
-            databaseFacade.openConnection();
-            int transactionId = orderDAO.processPaymentTransaction(completeOrder.getOrderId(), paymentMethod, completeOrder.getTableId());
-            if (transactionId != -1) {
-                generateReceipt(completeOrder.getOrderId(), transactionId, completeOrder.getTableId(), paymentMethod, amountReceived);
-                // Notify the observer about the payment processing
-                onPaymentProcessed(completeOrder.getOrderId(), transactionId, paymentMethod, amountReceived);
-            }
-            loadOrders(); // Refresh the orders screen to remove completed orders
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-            showErrorAlert("Errore durante il pagamento", "Si è verificato un errore durante il pagamento. Per favore, riprova.");
-        } finally {
-            databaseFacade.closeConnection();
-        }
-    }
-
-    private void generateReceipt(int orderId, int transactionId, int tableId, String paymentMethod, double amountReceived) throws IOException {
-        String receiptDirectory = "receipts";
-        Files.createDirectories(Paths.get(receiptDirectory)); // Crea la directory se non esiste
-
-        String receiptFileName = receiptDirectory + "/receipt_" + transactionId + ".txt";
-        try (FileWriter writer = new FileWriter(receiptFileName)) {
-            writer.write("Scontrino\n");
-            writer.write("ID Transazione: " + transactionId + "\n");
-            writer.write("ID Ordine: " + orderId + "\n");
-            writer.write("ID Tavolo: " + tableId + "\n");
-            writer.write("Data: " + new Timestamp(System.currentTimeMillis()) + "\n");
-            writer.write("Metodo di Pagamento: " + paymentMethod + "\n");
-            writer.write("Dettagli Ordine:\n");
-
-            double total = 0;
-            List<Order> orders = orderDAO.getOrderDetails(orderId);
-
-            for (Order order : orders) {
-                String dishName = order.getDishName();
-                int quantity = order.getQuantity();
-                double price = order.getDishPrice();
-                total += quantity * price;
-                writer.write(dishName + " - Quantità: " + quantity + " - Prezzo: $" + price + "\n");
-            }
-
-            writer.write("Totale: $" + total + "\n");
+        Button processPaymentButton = new Button("Processa Pagamento");
+        processPaymentButton.setOnAction(e -> {
+            String paymentMethod = paymentMethodBox.getValue();
             if ("Contanti".equals(paymentMethod)) {
-                double change = amountReceived - total;
-                writer.write("Importo Ricevuto: $" + amountReceived + "\n");
-                writer.write("Resto: $" + change + "\n");
+                String amountReceivedStr = amountReceivedField.getText();
+                if (!isNumeric(amountReceivedStr)) {
+                    showErrorAlert("Errore di input", "L'importo ricevuto deve essere un numero.");
+                    return;
+                }
+                double amountReceived = Double.parseDouble(amountReceivedStr);
+                if (amountReceived < totalPrice) {
+                    showErrorAlert("Errore di pagamento", "L'importo ricevuto è inferiore al totale.");
+                    return;
+                }
+                processPayment(orderId, paymentMethod, amountReceived, totalPrice, tableId);
+            } else {
+                processPayment(orderId, paymentMethod, totalPrice, totalPrice, tableId);
             }
+            dialog.close();
+        });
 
-            System.out.println("Scontrino generato: " + receiptFileName); // Messaggio di debug
+        dialogVBox.getChildren().addAll(totalLabel, amountReceivedField, paymentMethodBox, processPaymentButton);
+
+        Scene dialogScene = new Scene(dialogVBox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    private void processPayment(int orderId, String paymentMethod, double amountReceived, double totalPrice, int tableId) {
+        int transactionId = orderDAO.processPaymentTransaction(orderId, paymentMethod, tableId);
+        if (transactionId != -1) {
+            generateReceipt(orderId, paymentMethod, amountReceived, totalPrice);
+            onPaymentProcessed(orderId, transactionId, paymentMethod, amountReceived);
+        } else {
+            showErrorAlert("Errore di pagamento", "Si è verificato un errore durante l'elaborazione del pagamento. Per favore, riprova.");
+        }
+    }
+
+    private void generateReceipt(int orderId, String paymentMethod, double amountReceived, double total) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("receipt_" + orderId + ".txt"))) {
+            writer.write("Ricevuta per Ordine #" + orderId + "\n");
+            writer.write("Metodo di Pagamento: " + paymentMethod + "\n");
+            writer.write("Totale: $" + total + "\n");
+
+            if ("Contanti".equals(paymentMethod)) {
+                writer.write("Importo Ricevuto: $" + amountReceived + "\n");
+                writer.write("Restante: $" + (amountReceived - total) + "\n");
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            showErrorAlert("Errore durante la generazione dello scontrino", "Si è verificato un errore durante la generazione dello scontrino. Per favore, riprova.");
         }
-    }
-
-    private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private boolean isNumeric(String str) {
@@ -253,29 +192,40 @@ public class OrdersScreen extends Stage implements OrderObserver {
         }
     }
 
-    // Observer methods
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showPaidOrdersScreen(Stage primaryStage) {
+        PaidOrdersScreen paidOrdersScreen = new PaidOrdersScreen();
+        paidOrdersScreen.show();
+    }
 
     @Override
-    public void onOrderStatusChanged(int orderId, boolean delivered) {
-        // Refresh the orders screen when the status of an order changes
-        loadOrders();
+    public void onOrderStatusChanged(int orderId, boolean isDelivered) {
+        System.out.println("Order ID: " + orderId + " delivery status changed to: " + isDelivered);
+        Platform.runLater(this::loadOrders);
     }
 
     @Override
     public void onOrderDeleted(int orderId) {
-        // Refresh the orders screen when an order is deleted
-        loadOrders();
+        System.out.println("Order ID: " + orderId + " has been deleted.");
+        Platform.runLater(this::loadOrders);
     }
 
     @Override
     public void onDishDeleted(int orderId, int menuId) {
-        // Refresh the orders screen when a dish is deleted
-        loadOrders();
+        System.out.println("Dish from order ID: " + orderId + " and menu ID: " + menuId + " has been deleted.");
+        Platform.runLater(this::loadOrders);
     }
 
     @Override
     public void onPaymentProcessed(int orderId, int transactionId, String paymentMethod, double amountReceived) {
-        // Refresh the orders screen when a payment is processed
-        loadOrders();
+        System.out.println("Payment processed for order ID: " + orderId + " with transaction ID: " + transactionId + ". Payment Method: " + paymentMethod + ". Amount Received: " + amountReceived);
+        Platform.runLater(this::loadOrders);
     }
 }
