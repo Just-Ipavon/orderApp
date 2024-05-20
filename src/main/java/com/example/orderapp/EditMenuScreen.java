@@ -275,7 +275,7 @@ public class EditMenuScreen extends Stage {
             pstmt.setString(3, description);
 
             String imageFileName = new File(imagePath).getName();
-            String newImagePath = "assets/" + imageFileName;
+            String newImagePath = "src/main/resources/assets/" + imageFileName;
             Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
             pstmt.setString(4, imageFileName);
 
@@ -293,7 +293,7 @@ public class EditMenuScreen extends Stage {
 
             if (imagePath != null && !imagePath.isEmpty()) {
                 String imageFileName = new File(imagePath).getName();
-                String newImagePath = "assets/" + imageFileName;
+                String newImagePath = "src/main/resources/assets/" + imageFileName;
                 try {
                     Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     pstmt.setString(4, imageFileName);
