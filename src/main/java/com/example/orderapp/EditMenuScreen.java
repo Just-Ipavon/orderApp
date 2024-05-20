@@ -144,21 +144,6 @@ public class EditMenuScreen extends Stage {
             e.printStackTrace();
         }
     }
-/*
-    private Image loadImage(String imagePath) {
-        try {
-            URL imageURL = getClass().getResource("/" + imagePath);
-            if (imageURL == null) {
-                System.err.println("Immagine non trovata: " + imagePath);
-                return new Image(getClass().getResource("/assets/error.png").toExternalForm());
-            } else {
-                return new Image(imageURL.toExternalForm());
-            }
-        } catch (IllegalArgumentException e) {
-            return new Image(getClass().getResource("/assets/error.png").toExternalForm());
-        }
-    }
-*/
 
     private Image loadImage(String imagePath) {
         try {
