@@ -144,7 +144,7 @@ public class EditMenuScreen extends Stage {
             e.printStackTrace();
         }
     }
-
+/*
     private Image loadImage(String imagePath) {
         try {
             URL imageURL = getClass().getResource("/" + imagePath);
@@ -158,6 +158,25 @@ public class EditMenuScreen extends Stage {
             return new Image(getClass().getResource("/assets/error.png").toExternalForm());
         }
     }
+*/
+
+    private Image loadImage(String imagePath) {
+        try {
+            // Aggiungi un messaggio di debug per il percorso dell'immagine
+            System.out.println("Caricamento immagine da percorso: " + imagePath);
+
+            URL imageURL = getClass().getResource("/" + imagePath);
+            if (imageURL == null) {
+                System.err.println("Immagine non trovata: " + imagePath);
+                return new Image(getClass().getResource("/assets/error.png").toExternalForm());
+            } else {
+                return new Image(imageURL.toExternalForm());
+            }
+        } catch (IllegalArgumentException e) {
+            return new Image(getClass().getResource("/assets/error.png").toExternalForm());
+        }
+    }
+
 
     private void showDishForm(Integer menuId) throws SQLException {
         Stage dishFormStage = new Stage();
@@ -200,7 +219,7 @@ public class EditMenuScreen extends Stage {
                             dishNameField.setText(rs.getString("menu_name"));
                             dishPriceField.setText(Double.toString(rs.getDouble("menu_price")));
                             dishDescriptionArea.setText(rs.getString("menu_description"));
-                            imagePathLabel.setText("assets/" + rs.getString("menu_image"));
+                            imagePathLabel.setText("src/main/resources/assets/" + rs.getString("menu_image"));
 
                             String categoryNameQuery = "SELECT category_name FROM menu_categories WHERE category_id = ?";
                             try (PreparedStatement categoryNameStmt = conn.prepareStatement(categoryNameQuery)) {
@@ -253,8 +272,8 @@ public class EditMenuScreen extends Stage {
                 } else {
                     updateDish(conn, menuId, dishName, dishPrice, dishDescription, imagePath, categoryId);
                 }
-                dishFormStage.close();
-                refreshScreen();
+                dishFormStage.close();  // Close the form stage before refreshing
+                refreshScreen();  // Refresh the screen to reflect changes
             } catch (SQLException | IOException ex) {
                 ex.printStackTrace();
             }
@@ -266,7 +285,6 @@ public class EditMenuScreen extends Stage {
         dishFormStage.setScene(scene);
         dishFormStage.show();
     }
-
 
     private void addDish(Connection conn, String name, double price, String description, String imagePath, int categoryId) throws SQLException, IOException {
         String insertQuery = "INSERT INTO menus (menu_name, menu_price, menu_description, menu_image, category_id) VALUES (?, ?, ?, ?, ?)";
@@ -295,13 +313,18 @@ public class EditMenuScreen extends Stage {
             if (imagePath != null && !imagePath.isEmpty()) {
                 String imageFileName = new File(imagePath).getName();
                 String newImagePath = "src/main/resources/assets/" + imageFileName;
-                try {
-                    Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    pstmt.setString(4, imageFileName);
-                } catch (IOException e) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Errore nel caricamento dell'immagine. Verrà utilizzata un'immagine di errore.");
-                    alert.showAndWait();
-                    pstmt.setString(4, "error.png");
+                Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                pstmt.setString(4, imageFileName);
+            } else {
+                // Keep the existing image if no new image is provided
+                String existingImageQuery = "SELECT menu_image FROM menus WHERE menu_id = ?";
+                try (PreparedStatement existingImageStmt = conn.prepareStatement(existingImageQuery)) {
+                    existingImageStmt.setInt(1, menuId);
+                    try (ResultSet rs = existingImageStmt.executeQuery()) {
+                        if (rs.next()) {
+                            pstmt.setString(4, rs.getString("menu_image"));
+                        }
+                    }
                 }
             }
 
@@ -310,6 +333,8 @@ public class EditMenuScreen extends Stage {
             pstmt.executeUpdate();
         }
     }
+
+
 
     private void deleteDish(int menuId) throws SQLException {
         String deleteQuery = "DELETE FROM menus WHERE menu_id = ?";
