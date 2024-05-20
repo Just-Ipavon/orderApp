@@ -267,6 +267,7 @@ public class EditMenuScreen extends Stage {
         dishFormStage.show();
     }
 
+
     private void addDish(Connection conn, String name, double price, String description, String imagePath, int categoryId) throws SQLException, IOException {
         String insertQuery = "INSERT INTO menus (menu_name, menu_price, menu_description, menu_image, category_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
@@ -320,9 +321,7 @@ public class EditMenuScreen extends Stage {
     }
 
     private void refreshScreen() {
-        ScrollPane scrollPane = (ScrollPane) getScene().getRoot();
-        VBox mainLayout = (VBox) scrollPane.getContent();
-        mainLayout.getChildren().clear();
+        VBox mainLayout = new VBox();
         mainLayout.getChildren().add(createMenuUIFromDatabase());
 
         Button addDishButton = new Button("Aggiungi Piatto");
@@ -341,5 +340,9 @@ public class EditMenuScreen extends Stage {
             new Main(UserSession.getInstance(null, null)).start(mainStage);
         });
         mainLayout.getChildren().add(backButton);
+
+        ScrollPane scrollPane = (ScrollPane) getScene().getRoot();
+        scrollPane.setContent(mainLayout);
     }
+
 }
