@@ -37,7 +37,7 @@ public class PaidOrdersScreen extends Stage {
     private void loadPaidOrders() {
         try {
             databaseFacade.openConnection();
-            List<CompleteOrder> orders = orderDAO.getAllCompletedOrders(); // Cambiato qui per ottenere gli ordini pagati
+            List<CompleteOrder> orders = orderDAO.getAllCompletedOrders();
             mainLayout.getChildren().clear();
 
             for (CompleteOrder completeOrder : orders) {
@@ -48,9 +48,11 @@ public class PaidOrdersScreen extends Stage {
                 Label orderIdLabel = new Label("ID Ordine: " + completeOrder.getOrderId());
                 Label tableIdLabel = new Label("ID Tavolo: " + completeOrder.getTableId());
                 Label totalLabel = new Label("Totale: $" + completeOrder.getTotalPrice());
+                Label paymentMethodLabel = new Label("Metodo di Pagamento: " + completeOrder.getPaymentMethod());
+                Label dateLabel = new Label("Data: " + completeOrder.getTransactionDate());
 
                 HBox headerBox = new HBox(10);
-                headerBox.getChildren().addAll(orderIdLabel, tableIdLabel, totalLabel);
+                headerBox.getChildren().addAll(orderIdLabel, tableIdLabel, totalLabel, paymentMethodLabel, dateLabel);
                 orderBox.getChildren().add(headerBox);
 
                 for (Order order : completeOrder.getDishes()) {

@@ -67,16 +67,17 @@ public class CompleteOrderDAO {
         return orders;
     }
 
-    // Nuovo metodo per ottenere gli ordini completati
     public List<CompleteOrder> getAllCompletedOrders() {
         List<CompleteOrder> orders = new ArrayList<>();
         try {
             dbFacade.openConnection();
             Connection conn = dbFacade.getConnection();
-            String query = "SELECT po.order_id, po.table_id, po.delivered, po.completed, io.menu_id, io.quantity, m.menu_name, m.menu_price " +
+            String query = "SELECT po.order_id, po.table_id, po.delivered, po.completed, io.menu_id, io.quantity, m.menu_name, m.menu_price, " +
+                    "t.payment_method, t.transaction_date " +
                     "FROM orders po " +
                     "JOIN dishes_order io ON po.order_id = io.order_id " +
                     "JOIN menus m ON io.menu_id = m.menu_id " +
+                    "JOIN transaction t ON po.order_id = t.id_transaction " +
                     "WHERE po.completed = TRUE " +
                     "ORDER BY po.order_id";
 
@@ -95,11 +96,15 @@ public class CompleteOrderDAO {
                     int quantity = rs.getInt("quantity");
                     String dishName = rs.getString("menu_name");
                     double dishPrice = rs.getDouble("menu_price");
+                    String paymentMethod = rs.getString("payment_method");
+                    Timestamp transactionDate = rs.getTimestamp("transaction_date");
 
                     if (currentOrder == null || orderId != currentOrderId) {
                         currentOrder = new CompleteOrder(orderId, tableId);
                         currentOrder.setDelivered(delivered);
                         currentOrder.setCompleted(completed);
+                        currentOrder.setPaymentMethod(paymentMethod);
+                        currentOrder.setTransactionDate(transactionDate);
                         orders.add(currentOrder);
                         currentOrderId = orderId;
                     }

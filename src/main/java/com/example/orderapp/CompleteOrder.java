@@ -1,5 +1,6 @@
 package com.example.orderapp;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ public class CompleteOrder {
     private boolean delivered;
     private boolean completed;
     private List<Order> dishes;
+    private String paymentMethod;
+    private Timestamp transactionDate;
 
     public CompleteOrder(int orderId, int tableId) {
         this.orderId = orderId;
@@ -52,5 +55,21 @@ public class CompleteOrder {
 
     public double getTotalPrice() {
         return dishes.stream().mapToDouble(Order::getTotalPrice).sum();
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public Timestamp getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Timestamp transactionDate) {
+        this.transactionDate = transactionDate;
     }
 }
