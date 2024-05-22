@@ -40,7 +40,7 @@ public class Main extends Application {
 
         // Logica per il logout
         btnLogout.setOnAction(e -> {
-            userSession = UserSession.getInstance(null, null);
+            userSession = UserSession.getInstance(null, false);
             primaryStage.close();
             try {
                 new LoginUI().start(new Stage());

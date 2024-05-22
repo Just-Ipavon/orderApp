@@ -150,7 +150,7 @@ public class EditMenuScreen extends Stage {
             // Aggiungi un messaggio di debug per il percorso dell'immagine
             System.out.println("Caricamento immagine da percorso: " + imagePath);
 
-            URL imageURL = getClass().getResource("/" + imagePath);
+            URL imageURL = this.getClass().getResource("/" + imagePath);
             if (imageURL == null) {
                 System.err.println("Immagine non trovata: " + imagePath);
                 return new Image(getClass().getResource("/assets/error.png").toExternalForm());
@@ -280,7 +280,9 @@ public class EditMenuScreen extends Stage {
 
             String imageFileName = new File(imagePath).getName();
             String newImagePath = "src/main/resources/assets/" + imageFileName;
+            String newImagePathTarget = "target/classes/assets/" + imageFileName;
             Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(new File(imagePath).toPath(), new File(newImagePathTarget).toPath(), StandardCopyOption.REPLACE_EXISTING);
             pstmt.setString(4, imageFileName);
 
             pstmt.setInt(5, categoryId);
@@ -298,7 +300,9 @@ public class EditMenuScreen extends Stage {
             if (imagePath != null && !imagePath.isEmpty()) {
                 String imageFileName = new File(imagePath).getName();
                 String newImagePath = "src/main/resources/assets/" + imageFileName;
+                String newImagePathTarget = "target/classes/assets/" + imageFileName;
                 Files.copy(new File(imagePath).toPath(), new File(newImagePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(new File(imagePath).toPath(), new File(newImagePathTarget).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 pstmt.setString(4, imageFileName);
             } else {
                 // Keep the existing image if no new image is provided
