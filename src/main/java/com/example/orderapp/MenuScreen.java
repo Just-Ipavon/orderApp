@@ -102,10 +102,6 @@ public class MenuScreen extends Stage {
                         }
                     }
                 }
-
-                Button submitOrderButton = new Button("Avvia Ordinazione");
-                submitOrderButton.setOnAction(e -> selectTable());
-                mainLayout.getChildren().add(submitOrderButton);
             }
         } catch (Exception e) {
             System.err.println("Si è verificato un errore: " + e.getMessage());
@@ -252,6 +248,11 @@ public class MenuScreen extends Stage {
 
         Label totalLabel = new Label("Totale: $" + total);
         layout.getChildren().add(totalLabel);
+
+        Button submitOrderButton = new Button("Avvia Ordinazione");
+        submitOrderButton.setOnAction(e -> selectTable());
+        layout.getChildren().add(submitOrderButton);
+
         Scene scene = new Scene(layout);
         cartStage.setScene(scene);
         cartStage.show();
