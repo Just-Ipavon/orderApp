@@ -24,9 +24,9 @@ public class Main extends Application {
         Button btnLogout = new Button("Logout");
         Button btnModificaMenu = new Button("Modifica Menu");
         Button btnUtenti = new Button("Utenti registrati");
+        Button btnSimulazione = new Button("Simulazione");
 
         // Creazione del layout
-        VBox layout = new VBox(10);
         VBox mainButtonsLayout = new VBox(10);
         mainButtonsLayout.getChildren().addAll(btnMenu, btnOrdini);
 
@@ -35,8 +35,8 @@ public class Main extends Application {
             mainButtonsLayout.getChildren().addAll(btnModificaMenu, btnUtenti);
         }
 
-        // Aggiungi il layout principale e il pulsante di logout in fondo
-        layout.getChildren().addAll(mainButtonsLayout, btnLogout);
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(mainButtonsLayout, btnSimulazione, btnLogout);
 
         // Logica per il logout
         btnLogout.setOnAction(e -> {
@@ -80,6 +80,15 @@ public class Main extends Application {
         btnUtenti.setOnAction(e -> {
             try {
                 new UsersScreen().show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        // Logica per il pulsante "Simulazione"
+        btnSimulazione.setOnAction(e -> {
+            try {
+                new SimulationScreen(primaryStage).show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

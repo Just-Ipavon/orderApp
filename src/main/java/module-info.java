@@ -6,6 +6,7 @@ module com.example.orderapp {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires java.desktop;
 
     opens com.example.orderapp to javafx.fxml;
     exports com.example.orderapp;
