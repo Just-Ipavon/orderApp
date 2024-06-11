@@ -1,6 +1,8 @@
-package com.example.orderapp;
+package com.example.orderapp.classes;
 
-class Order implements OrderComponent {
+import com.example.orderapp.OrderComponent;
+
+public class Order implements OrderComponent {
     private final int menuId;
     private final String dishName;
     private final double dishPrice;

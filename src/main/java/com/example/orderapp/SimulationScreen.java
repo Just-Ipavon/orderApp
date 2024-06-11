@@ -1,5 +1,9 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.MenuItem;
+import com.example.orderapp.classes.Order;
+import com.example.orderapp.classes.Table;
+import com.example.orderapp.classes.Waiter;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.sql.*;
 import java.util.*;
@@ -45,7 +51,7 @@ public class SimulationScreen extends Stage {
         // Setup ScrollPane for summary
         summaryScrollPane.setContent(summaryBox);
         summaryScrollPane.setFitToWidth(true);
-        summaryScrollPane.setFitToHeight(true);
+        summaryScrollPane.setPrefHeight(150); // Set fixed height
 
         summaryBox.setPadding(new Insets(10));
         summaryBox.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -353,9 +359,10 @@ public class SimulationScreen extends Stage {
     }
 
     private void logSummary(String message) {
-        Label logLabel = new Label(message);
-        logLabel.setWrapText(true); // Ensure text wrapping
-        summaryBox.getChildren().add(logLabel);
+        Text text = new Text(message + "\n");
+        text.setWrappingWidth(summaryScrollPane.getWidth() - 20); // Set wrapping width
+        TextFlow textFlow = new TextFlow(text);
+        summaryBox.getChildren().add(textFlow);
     }
 
     public static void main(String[] args) {
@@ -366,77 +373,3 @@ public class SimulationScreen extends Stage {
     }
 }
 
-class Table {
-    private final int tableId;
-    private final int numberOfSeats;
-    private Rectangle rectangle;
-
-    public Table(int tableId, int numberOfSeats) {
-        this.tableId = tableId;
-        this.numberOfSeats = numberOfSeats;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public int getNumberOfSeats() {
-        return numberOfSeats;
-    }
-
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
-
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
-    }
-}
-
-class MenuItem {
-    private final int menuId;
-    private final String name;
-    private final double price;
-
-    public MenuItem(int menuId, String name, double price) {
-        this.menuId = menuId;
-        this.name = name;
-        this.price = price;
-    }
-
-    public int getMenuId() {
-        return menuId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-}
-
-class Waiter {
-    private final int userId;
-    private final String firstName;
-    private final String lastName;
-
-    public Waiter(int userId, String firstName, String lastName) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-}

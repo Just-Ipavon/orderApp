@@ -1,6 +1,6 @@
 package com.example.orderapp;
 
-interface OrderComponent {
+public interface OrderComponent {
     int getMenuId();
     String getDishName();
     double getDishPrice();

@@ -1,5 +1,7 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.Order;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

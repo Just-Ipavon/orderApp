@@ -10,6 +10,13 @@ public class Main extends Application {
 
     private UserSession userSession;
 
+    // Costruttore per compatibilità con Application.launch
+    public Main() {
+        // Inizializza con una sessione utente di default (potrebbe essere null)
+        this.userSession = UserSession.getInstance();
+    }
+
+    // Costruttore per inizializzare con una sessione utente specifica
     public Main(UserSession userSession) {
         this.userSession = userSession;
     }
@@ -40,7 +47,7 @@ public class Main extends Application {
 
         // Logica per il logout
         btnLogout.setOnAction(e -> {
-            userSession = UserSession.getInstance(null, false);
+            userSession = UserSession.getInstance(null, false); // Reset della sessione
             primaryStage.close();
             try {
                 new LoginUI().start(new Stage());
@@ -79,7 +86,7 @@ public class Main extends Application {
         // Logica per il pulsante "Utenti registrati"
         btnUtenti.setOnAction(e -> {
             try {
-                new UsersScreen().show();
+                new UsersScreen(userSession.isAdmin()).show(); // Passa se l'utente è admin
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
