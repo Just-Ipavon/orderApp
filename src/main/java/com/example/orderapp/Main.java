@@ -1,5 +1,6 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.UserSession;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

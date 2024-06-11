@@ -1,5 +1,6 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.UserSession;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

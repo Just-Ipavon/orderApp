@@ -10,4 +10,6 @@ module com.example.orderapp {
 
     opens com.example.orderapp to javafx.fxml;
     exports com.example.orderapp;
+    exports com.example.orderapp.classes;
+    opens com.example.orderapp.classes to javafx.fxml;
 }

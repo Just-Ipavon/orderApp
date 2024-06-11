@@ -1,4 +1,4 @@
-package com.example.orderapp;
+package com.example.orderapp.classes;
 
 public class UserSession {
     private static UserSession instance;

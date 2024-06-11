@@ -1,8 +1,8 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.UserSession;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginController {
