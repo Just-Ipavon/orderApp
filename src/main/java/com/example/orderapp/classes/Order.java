@@ -61,4 +61,5 @@ public class Order implements OrderComponent {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
 }
