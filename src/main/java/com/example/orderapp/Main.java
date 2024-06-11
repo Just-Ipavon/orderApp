@@ -10,13 +10,10 @@ public class Main extends Application {
 
     private UserSession userSession;
 
-    // Costruttore per compatibilità con Application.launch
     public Main() {
-        // Inizializza con una sessione utente di default (potrebbe essere null)
         this.userSession = UserSession.getInstance();
     }
 
-    // Costruttore per inizializzare con una sessione utente specifica
     public Main(UserSession userSession) {
         this.userSession = userSession;
     }
@@ -25,7 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Ristorante");
 
-        // Creazione dei pulsanti
+        // Create buttons
         Button btnMenu = new Button("Menù dei piatti");
         Button btnOrdini = new Button("Ordinazioni");
         Button btnLogout = new Button("Logout");
@@ -33,11 +30,11 @@ public class Main extends Application {
         Button btnUtenti = new Button("Utenti registrati");
         Button btnSimulazione = new Button("Simulazione");
 
-        // Creazione del layout
+        // Create layout
         VBox mainButtonsLayout = new VBox(10);
         mainButtonsLayout.getChildren().addAll(btnMenu, btnOrdini);
 
-        // Verifica se l'utente è admin
+        // Check if user is admin
         if (userSession.isAdmin()) {
             mainButtonsLayout.getChildren().addAll(btnModificaMenu, btnUtenti);
         }
@@ -45,9 +42,9 @@ public class Main extends Application {
         VBox layout = new VBox(10);
         layout.getChildren().addAll(mainButtonsLayout, btnSimulazione, btnLogout);
 
-        // Logica per il logout
+        // Logout logic
         btnLogout.setOnAction(e -> {
-            userSession = UserSession.getInstance(null, false); // Reset della sessione
+            userSession.cleanUserSession(); // Reset the session
             primaryStage.close();
             try {
                 new LoginUI().start(new Stage());
@@ -56,7 +53,7 @@ public class Main extends Application {
             }
         });
 
-        // Logica per il pulsante "Menù dei piatti"
+        // "Menù dei piatti" button logic
         btnMenu.setOnAction(e -> {
             try {
                 new RestaurantMenuApp().start(primaryStage);
@@ -65,7 +62,7 @@ public class Main extends Application {
             }
         });
 
-        // Logica per il pulsante "Ordinazioni"
+        // "Ordinazioni" button logic
         btnOrdini.setOnAction(e -> {
             try {
                 new OrdersScreen(primaryStage).show();
@@ -74,7 +71,7 @@ public class Main extends Application {
             }
         });
 
-        // Logica per il pulsante "Modifica Menu"
+        // "Modifica Menu" button logic
         btnModificaMenu.setOnAction(e -> {
             try {
                 new EditMenuScreen(primaryStage).show();
@@ -83,16 +80,16 @@ public class Main extends Application {
             }
         });
 
-        // Logica per il pulsante "Utenti registrati"
+        // "Utenti registrati" button logic
         btnUtenti.setOnAction(e -> {
             try {
-                new UsersScreen(userSession.isAdmin()).show(); // Passa se l'utente è admin
+                new UsersScreen(userSession.isAdmin()).show(); // Pass if the user is admin
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
-        // Logica per il pulsante "Simulazione"
+        // "Simulazione" button logic
         btnSimulazione.setOnAction(e -> {
             try {
                 new SimulationScreen(primaryStage).show();

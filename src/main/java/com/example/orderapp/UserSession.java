@@ -1,9 +1,5 @@
 package com.example.orderapp;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 public class UserSession {
     private static UserSession instance;
 
@@ -16,16 +12,13 @@ public class UserSession {
     }
 
     public static UserSession getInstance(String username, Boolean isAdmin) {
-        if (instance == null) {
-            instance = new UserSession(username, isAdmin);
-        }
+        instance = new UserSession(username, isAdmin);
         return instance;
     }
 
     public static UserSession getInstance() {
         return instance;
     }
-
 
     public String getUsername() {
         return username;

@@ -42,6 +42,7 @@ public class LoginUI extends Application {
             String password = passwordInput.getText();
             UserSession userSession = loginController.validateLogin(userId, password);
             if (userSession != null) {
+                UserSession.getInstance(userId, userSession.isAdmin()); // Set the new session
                 loadMainScreen(primaryStage, userSession);
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
