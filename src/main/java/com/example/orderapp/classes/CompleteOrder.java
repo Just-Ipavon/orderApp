@@ -1,6 +1,4 @@
-package com.example.orderapp;
-
-import com.example.orderapp.classes.Order;
+package com.example.orderapp.classes;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

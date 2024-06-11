@@ -1,5 +1,6 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.CompleteOrder;
 import com.example.orderapp.classes.Order;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
