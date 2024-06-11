@@ -3,11 +3,11 @@ package com.example.orderapp;
 import com.example.orderapp.classes.CompleteOrder;
 import com.example.orderapp.classes.Order;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -39,29 +39,26 @@ public class PaidOrdersScreen extends Stage {
     private void loadPaidOrders() {
         try {
             databaseFacade.openConnection();
-            List<CompleteOrder> orders = orderDAO.getAllCompletedOrders();
+            List<CompleteOrder> paidOrders = orderDAO.getAllCompletedOrders();
             mainLayout.getChildren().clear();
 
-            for (CompleteOrder completeOrder : orders) {
+            for (CompleteOrder completeOrder : paidOrders) {
                 VBox orderBox = new VBox(10);
                 orderBox.setPadding(new Insets(10));
                 orderBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;");
 
                 Label orderIdLabel = new Label("ID Ordine: " + completeOrder.getOrderId());
                 Label tableIdLabel = new Label("ID Tavolo: " + completeOrder.getTableId());
-                Label totalLabel = new Label("Totale: $" + completeOrder.getTotalPrice());
+                Label deliveredLabel = new Label("Consegnato: " + (completeOrder.isDelivered() ? "Sì" : "No"));
+                Label completedLabel = new Label("Completato: " + (completeOrder.isCompleted() ? "Sì" : "No"));
                 Label paymentMethodLabel = new Label("Metodo di Pagamento: " + completeOrder.getPaymentMethod());
-                Label dateLabel = new Label("Data: " + completeOrder.getTransactionDate());
+                Label transactionDateLabel = new Label("Data Transazione: " + completeOrder.getTransactionDate().toString());
 
-                HBox headerBox = new HBox(10);
-                headerBox.getChildren().addAll(orderIdLabel, tableIdLabel, totalLabel, paymentMethodLabel, dateLabel);
-                orderBox.getChildren().add(headerBox);
+                orderBox.getChildren().addAll(orderIdLabel, tableIdLabel, deliveredLabel, completedLabel, paymentMethodLabel, transactionDateLabel);
 
                 for (Order order : completeOrder.getDishes()) {
-                    HBox dishBox = new HBox(10);
                     Label dishLabel = new Label("Piatto: " + order.getDishName() + " - Quantità: " + order.getQuantity() + " - Prezzo: $" + order.getDishPrice());
-                    dishBox.getChildren().addAll(dishLabel);
-                    orderBox.getChildren().add(dishBox);
+                    orderBox.getChildren().add(dishLabel);
                 }
 
                 mainLayout.getChildren().add(orderBox);
