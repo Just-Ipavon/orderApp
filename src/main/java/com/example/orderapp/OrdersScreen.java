@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class OrdersScreen extends Stage implements OrderObserver {
 
         // Creating the button to view paid orders
         Button paidOrdersButton = new Button("Ordini Pagati");
-        paidOrdersButton.setOnAction(e -> showPaidOrdersScreen(primaryStage));
+        paidOrdersButton.setOnAction(e -> showPaidOrdersScreen());
 
         // Align the button to the bottom right
         HBox buttonContainer = new HBox(paidOrdersButton);
@@ -161,7 +162,7 @@ public class OrdersScreen extends Stage implements OrderObserver {
     }
 
     private void processPayment(int orderId, String paymentMethod, double amountReceived, double totalPrice, int tableId) {
-        int transactionId = orderDAO.processPaymentTransaction(orderId, paymentMethod, tableId);
+        int transactionId = orderDAO.processPaymentTransaction(orderId, paymentMethod);
         if (transactionId != -1) {
             generateReceipt(orderId, paymentMethod, amountReceived, totalPrice);
             onPaymentProcessed(orderId, transactionId, paymentMethod, amountReceived);
@@ -171,7 +172,13 @@ public class OrdersScreen extends Stage implements OrderObserver {
     }
 
     private void generateReceipt(int orderId, String paymentMethod, double amountReceived, double total) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("receipt_" + orderId + ".txt"))) {
+        String directoryPath = "receipts";
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryPath + "/receipt_" + orderId + ".txt"))) {
             writer.write("Ricevuta per Ordine #" + orderId + "\n");
             writer.write("Metodo di Pagamento: " + paymentMethod + "\n");
             writer.write("Totale: $" + total + "\n");
@@ -184,6 +191,7 @@ public class OrdersScreen extends Stage implements OrderObserver {
             e.printStackTrace();
         }
     }
+
 
     private boolean isNumeric(String str) {
         try {
@@ -202,7 +210,7 @@ public class OrdersScreen extends Stage implements OrderObserver {
         alert.showAndWait();
     }
 
-    private void showPaidOrdersScreen(Stage primaryStage) {
+    private void showPaidOrdersScreen() {
         PaidOrdersScreen paidOrdersScreen = new PaidOrdersScreen();
         paidOrdersScreen.show();
     }
@@ -227,7 +235,7 @@ public class OrdersScreen extends Stage implements OrderObserver {
 
     @Override
     public void onPaymentProcessed(int orderId, int transactionId, String paymentMethod, double amountReceived) {
-        System.out.println("Payment processed for order ID: " + orderId + " with transaction ID: " + transactionId + ". Payment Method: " + paymentMethod + ". Amount Received: " + amountReceived);
+        System.out.println("Payment processed for order ID: " + orderId + " with transaction ID: " + transactionId + ". Payment Method: " + paymentMethod + ". Amount received: $" + amountReceived);
         Platform.runLater(this::loadOrders);
     }
 }

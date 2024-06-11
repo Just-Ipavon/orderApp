@@ -12,6 +12,7 @@ public class CompleteOrder {
     private List<Order> dishes;
     private String paymentMethod;
     private Timestamp transactionDate;
+    private double paymentAmount; // Nuovo attributo
 
     public CompleteOrder(int orderId, int tableId) {
         this.orderId = orderId;
@@ -19,6 +20,7 @@ public class CompleteOrder {
         this.delivered = false;
         this.completed = false;
         this.dishes = new ArrayList<>();
+        this.paymentAmount = 0.0; // Inizializzazione
     }
 
     public int getOrderId() {
@@ -71,5 +73,13 @@ public class CompleteOrder {
 
     public void setTransactionDate(Timestamp transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 }

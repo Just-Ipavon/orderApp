@@ -15,9 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,6 +34,7 @@ public class SimulationScreen extends Stage {
     private int numberOfWaiters;
     private final List<Waiter> waiters = new ArrayList<>(); // List of waiters
     private boolean running = true; // Simulation running flag
+    private final CompleteOrderDAO completeOrderDAO = new CompleteOrderDAO();
 
     public SimulationScreen(Stage mainStage) throws SQLException {
         this.setTitle("Simulazione di una serata di lavoro");
@@ -133,7 +135,11 @@ public class SimulationScreen extends Stage {
                 public void run() {
                     Platform.runLater(() -> {
                         if (running) {
-                            assignWaiterToRandomTable(waiters.get(waiterIndex));
+                            try {
+                                assignWaiterToRandomTable(waiters.get(waiterIndex));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     });
                 }
@@ -148,7 +154,11 @@ public class SimulationScreen extends Stage {
                     if (running) {
                         for (Waiter waiter : waiters) {
                             if (activeWaiters.get() < numberOfWaiters && running) {
-                                assignWaiterToRandomTable(waiter);
+                                try {
+                                    assignWaiterToRandomTable(waiter);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                         }
                     }
@@ -157,7 +167,7 @@ public class SimulationScreen extends Stage {
         }, numberOfWaiters * 3000, 5000); // Start after all waiters have been initially assigned and then every 5 seconds
     }
 
-    private void assignWaiterToRandomTable(Waiter waiter) {
+    private void assignWaiterToRandomTable(Waiter waiter) throws SQLException {
         Random random = new Random();
         List<Table> availableTables = new ArrayList<>();
         for (Table table : tables) {
@@ -172,7 +182,7 @@ public class SimulationScreen extends Stage {
         }
     }
 
-    private void placeRandomOrder(Table table, Waiter waiter) {
+    private void placeRandomOrder(Table table, Waiter waiter) throws SQLException {
         Random random = new Random();
         List<MenuItem> menuItems = getMenuItemsFromDatabase();
         List<Order> orders = new ArrayList<>();
@@ -239,18 +249,17 @@ public class SimulationScreen extends Stage {
                 placedOrderStmt.setInt(4, tableId);
                 placedOrderStmt.executeUpdate();
 
-                ResultSet rs = placedOrderStmt.getGeneratedKeys();
+                ResultSet generatedKeys = placedOrderStmt.getGeneratedKeys();
                 int orderId = 0;
-                if (rs.next()) {
-                    orderId = rs.getInt(1);
+                if (generatedKeys.next()) {
+                    orderId = generatedKeys.getInt(1);
                 }
-                rs.close();
 
                 for (Order order : orders) {
                     orderStmt.setInt(1, orderId);
                     orderStmt.setInt(2, order.getMenuId());
-                    orderStmt.setInt(3, 1); // Assume quantity is 1
-                    orderStmt.setString(4, order.getNotes());
+                    orderStmt.setInt(3, 1);
+                    orderStmt.setString(4, null);
                     orderStmt.executeUpdate();
                 }
             }
@@ -261,66 +270,11 @@ public class SimulationScreen extends Stage {
         }
     }
 
-    private void processPayment(Table table) {
-        try {
-            databaseFacade.openConnection();
-
-            // Set order completion flag to true and process the payment transaction
-            String paymentMethod = "credit card"; // Example payment method
-            int orderId = processPaymentTransaction(table.getTableId(), paymentMethod);
-
-            table.getRectangle().setFill(Color.RED);
-            activeOrders.decrementAndGet(); // Decrement active orders count
-
-            // Log the table payment
-            logPayment(table);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            databaseFacade.closeConnection();
-        }
-    }
-
-    private int processPaymentTransaction(int tableId, String paymentMethod) throws SQLException {
-        int transactionId = -1;
-
-        String selectOrderIdQuery = "SELECT order_id FROM orders WHERE table_id = ? AND completed = FALSE";
-        try (PreparedStatement selectOrderStmt = databaseFacade.getConnection().prepareStatement(selectOrderIdQuery)) {
-            selectOrderStmt.setInt(1, tableId);
-            ResultSet rs = selectOrderStmt.executeQuery();
-            if (rs.next()) {
-                int orderId = rs.getInt("order_id");
-
-                // Insert into transactions table
-                String transactionQuery = "INSERT INTO transaction (payment_method, table_id, transaction_date) VALUES (?, ?, ?)";
-                try (PreparedStatement pstmt = databaseFacade.getConnection().prepareStatement(transactionQuery, Statement.RETURN_GENERATED_KEYS)) {
-                    pstmt.setString(1, paymentMethod);
-                    pstmt.setInt(2, tableId);
-                    pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                    pstmt.executeUpdate();
-                    ResultSet rsTrans = pstmt.getGeneratedKeys();
-                    if (rsTrans.next()) {
-                        transactionId = rsTrans.getInt(1);
-                    }
-                }
-
-                // Update the order status to completed
-                String updateOrderQuery = "UPDATE orders SET completed = TRUE WHERE order_id = ?";
-                try (PreparedStatement pstmt = databaseFacade.getConnection().prepareStatement(updateOrderQuery)) {
-                    pstmt.setInt(1, orderId);
-                    pstmt.executeUpdate();
-                }
-            }
-        }
-        return transactionId;
-    }
-
-    private List<MenuItem> getMenuItemsFromDatabase() {
+    private List<MenuItem> getMenuItemsFromDatabase() throws SQLException {
         List<MenuItem> menuItems = new ArrayList<>();
+        databaseFacade.openConnection();
         try {
-            databaseFacade.openConnection();
-
-            String query = "SELECT * FROM menus";
+            String query = "SELECT menu_id, menu_name, menu_price FROM menus";
             ResultSet rs = databaseFacade.executeQuery(query);
             while (rs.next()) {
                 int menuId = rs.getInt("menu_id");
@@ -334,42 +288,93 @@ public class SimulationScreen extends Stage {
         } finally {
             databaseFacade.closeConnection();
         }
-
         return menuItems;
     }
 
     private void logOrderTaken(Waiter waiter, Table table, List<Order> orders) {
         StringBuilder logMessage = new StringBuilder();
-        logMessage.append(String.format("Cameriere %s %s ha preso l'ordine al tavolo %d: ",
-                waiter.getFirstName(), waiter.getLastName(), table.getTableId()));
+        logMessage.append("Il cameriere ")
+                .append(waiter.getFirstName())
+                .append(" ")
+                .append(waiter.getLastName())
+                .append(" ha preso l'ordine per il tavolo ")
+                .append(table.getTableId())
+                .append(": ");
 
         for (Order order : orders) {
-            logMessage.append(String.format("\n- %s (x%d) - €%.2f", order.getDishName(), order.getQuantity(), order.getDishPrice()));
+            logMessage.append(order.getDishName()).append(", ");
         }
-        logSummary(logMessage.toString());
+
+        logMessage.setLength(logMessage.length() - 2); // Remove the last comma and space
+        logMessage.append(".");
+
+        Label logLabel = new Label(logMessage.toString());
+        summaryBox.getChildren().add(logLabel);
+
+        logToFile(logMessage.toString());
     }
 
     private void logOrderDelivered(Waiter waiter, Table table) {
-        logSummary(String.format("Cameriere %s %s ha consegnato l'ordine al tavolo %d.",
-                waiter.getFirstName(), waiter.getLastName(), table.getTableId()));
+        String logMessage = "Il cameriere " + waiter.getFirstName() + " " + waiter.getLastName() + " ha consegnato l'ordine al tavolo " + table.getTableId() + ".";
+        Label logLabel = new Label(logMessage);
+        summaryBox.getChildren().add(logLabel);
+
+        logToFile(logMessage);
     }
 
-    private void logPayment(Table table) {
-        logSummary(String.format("Il tavolo %d ha pagato l'ordine e se ne va.", table.getTableId()));
+    private void logToFile(String logMessage) {
+        String logFilePath = "summary.log";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            writer.write(logMessage);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void logSummary(String message) {
-        Text text = new Text(message + "\n");
-        text.setWrappingWidth(summaryScrollPane.getWidth() - 20); // Set wrapping width
-        TextFlow textFlow = new TextFlow(text);
-        summaryBox.getChildren().add(textFlow);
+    private void processPayment(Table table) {
+        int tableId = table.getTableId();
+        int orderId = getOrderIdForTable(tableId);
+        if (orderId != -1) {
+            // Change the table color to red again
+            table.getRectangle().setFill(Color.RED);
+            activeOrders.decrementAndGet(); // Decrement active orders count
+
+            // Use CompleteOrderDAO to mark the order as completed and assign a transaction
+            String paymentMethod = "bancomat"; // Example payment method, can be dynamic based on simulation requirements
+            completeOrderDAO.processPaymentTransaction(orderId, paymentMethod);
+
+            // Log the payment completion
+            logPaymentProcessed(tableId);
+        }
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private int getOrderIdForTable(int tableId) {
+        int orderId = -1;
+        try {
+            databaseFacade.openConnection();
+            String query = "SELECT order_id FROM orders WHERE table_id = ? AND completed = FALSE";
+            try (PreparedStatement pstmt = databaseFacade.getConnection().prepareStatement(query)) {
+                pstmt.setInt(1, tableId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        orderId = rs.getInt("order_id");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            databaseFacade.closeConnection();
+        }
+        return orderId;
     }
 
-    private static void launch(String[] args) {
+    private void logPaymentProcessed(int tableId) {
+        String logMessage = "Il pagamento per il tavolo " + tableId + " è stato elaborato.";
+        Label logLabel = new Label(logMessage);
+        summaryBox.getChildren().add(logLabel);
+
+        logToFile(logMessage);
     }
 }
-
