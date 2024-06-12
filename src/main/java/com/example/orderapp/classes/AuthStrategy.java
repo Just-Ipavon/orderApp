@@ -1,6 +1,4 @@
-package com.example.orderapp;
-
-import com.example.orderapp.classes.UserSession;
+package com.example.orderapp.classes;
 
 public interface AuthStrategy {
     UserSession authenticate(String userId, String password);

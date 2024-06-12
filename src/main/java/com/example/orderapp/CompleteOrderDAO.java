@@ -2,6 +2,7 @@ package com.example.orderapp;
 
 import com.example.orderapp.classes.CompleteOrder;
 import com.example.orderapp.classes.Order;
+import com.example.orderapp.classes.OrderObserver;
 
 import java.sql.*;
 import java.util.ArrayList;

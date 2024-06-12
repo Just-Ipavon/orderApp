@@ -1,7 +1,5 @@
 package com.example.orderapp.classes;
 
-import com.example.orderapp.OrderComponent;
-
 public class Order implements OrderComponent {
     private final int menuId;
     private final String dishName;

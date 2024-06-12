@@ -1,5 +1,6 @@
 package com.example.orderapp;
 
+import com.example.orderapp.classes.AuthStrategy;
 import com.example.orderapp.classes.UserSession;
 
 import java.sql.Connection;

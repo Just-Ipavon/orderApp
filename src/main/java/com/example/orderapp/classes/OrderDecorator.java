@@ -1,4 +1,4 @@
-package com.example.orderapp;
+package com.example.orderapp.classes;
 
 abstract class OrderDecorator implements OrderComponent {
     protected final OrderComponent decoratedOrder;
