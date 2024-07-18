@@ -27,11 +27,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 //Classe che implementa la schermata di visione degli ordini
 public class OrdersScreen extends Stage implements OrderObserver {
-    private VBox mainLayout;
+    private final VBox mainLayout;
     private final CompleteOrderDAO orderDAO;
     private final DatabaseFacade databaseFacade = new DatabaseFacade();
     //Costruttore
-    public OrdersScreen(Stage primaryStage) {
+    public OrdersScreen() {
         this.orderDAO = new CompleteOrderDAO();
         setTitle("Ordini");
         mainLayout = new VBox(10);

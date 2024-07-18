@@ -9,7 +9,7 @@ public class CompleteOrder {
     private final int tableId;
     private boolean delivered;
     private boolean completed;
-    private List<Order> dishes;
+    private final List<Order> dishes;
     private String paymentMethod;
     private Timestamp transactionDate;
     private double paymentAmount; // Nuovo attributo

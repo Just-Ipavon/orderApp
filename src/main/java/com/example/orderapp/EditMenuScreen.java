@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import com.example.orderapp.classes.UserSession;
 
@@ -151,12 +152,12 @@ public class EditMenuScreen extends Stage {
             URL imageURL = this.getClass().getResource("/" + imagePath);
             if (imageURL == null) {
                 System.err.println("Immagine non trovata: " + imagePath);
-                return new Image(getClass().getResource("/assets/error.png").toExternalForm());
+                return new Image(Objects.requireNonNull(getClass().getResource("/assets/error.png")).toExternalForm());
             } else {
                 return new Image(imageURL.toExternalForm());
             }
         } catch (IllegalArgumentException e) {
-            return new Image(getClass().getResource("/assets/error.png").toExternalForm());
+            return new Image(Objects.requireNonNull(getClass().getResource("/assets/error.png")).toExternalForm());
         }
     }
 
@@ -255,7 +256,7 @@ public class EditMenuScreen extends Stage {
                 } else {
                     updateDish(conn, menuId, dishName, dishPrice, dishDescription, imagePath, categoryId);
                 }
-                dishFormStage.close();  // chiudi prima di aggiornre
+                dishFormStage.close();  // chiudi prima di aggiornare
                 refreshScreen();  // aggiorna per vedere i cambiamenti
             } catch (SQLException | IOException ex) {
                 ex.printStackTrace();

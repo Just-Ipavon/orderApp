@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 //Classe (secondaria) main dell'app
 public class Main extends Application {
-    private UserSession userSession;
+    private final UserSession userSession;
     //Metodo Main secondario - senza parametri
     public Main() {
         this.userSession = UserSession.getInstance();
@@ -56,7 +56,7 @@ public class Main extends Application {
         });
         btnOrdini.setOnAction(e -> {
             try {
-                new OrdersScreen(primaryStage).show();
+                new OrdersScreen().show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -78,7 +78,7 @@ public class Main extends Application {
         // pulsante "Simulazione" logica
         btnSimulazione.setOnAction(e -> {
             try {
-                new SimulationScreen(primaryStage).show();
+                new SimulationScreen().show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

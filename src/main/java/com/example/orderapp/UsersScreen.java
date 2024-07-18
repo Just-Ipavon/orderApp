@@ -22,12 +22,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 //Classe per gestire la schermata utente
 public class UsersScreen extends Stage {
-    private DatabaseFacade dbFacade; //Facade per connessione al DB
-    private boolean currentUserIsAdmin; //Flag
+    private final DatabaseFacade dbFacade; //Facade per connessione al DB
 
     public UsersScreen(boolean currentUserIsAdmin) {
         this.dbFacade = new DatabaseFacade();
-        this.currentUserIsAdmin = currentUserIsAdmin;
+        //Flag
         setTitle("Gestione Utenti");
         TableView<User> tableView = new TableView<>();
         ObservableList<User> users = FXCollections.observableArrayList();

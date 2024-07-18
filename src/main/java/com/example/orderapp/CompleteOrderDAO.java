@@ -13,12 +13,12 @@ import com.example.orderapp.classes.Order;
 import com.example.orderapp.classes.OrderObserver;
 //Classe che implementa il pattern Data Access Object
 public class CompleteOrderDAO {
-    private DatabaseFacade dbFacade; //Facade per la connessione al DB
+    private final DatabaseFacade dbFacade; //Facade per la connessione al DB
     //Costruttore
     public CompleteOrderDAO() {
         this.dbFacade = new DatabaseFacade();
     }
-    private List<OrderObserver> observers = new ArrayList<>();
+    private final List<OrderObserver> observers = new ArrayList<>();
     public void addObserver(OrderObserver observer) {
         observers.add(observer);
     }

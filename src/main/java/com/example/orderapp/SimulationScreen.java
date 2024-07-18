@@ -33,14 +33,14 @@ public class SimulationScreen extends Stage {
     private final ScrollPane summaryScrollPane = new ScrollPane();
     private final AtomicInteger activeOrders = new AtomicInteger(0);
     private final AtomicInteger activeWaiters = new AtomicInteger(0);
-    private int numberOfWaiters;
+    private final int numberOfWaiters;
     private final List<Waiter> waiters = new ArrayList<>();
     private boolean running = true;
     private final GridPane waiterGrid = new GridPane();
     private final Map<Waiter, Rectangle> waiterRectangles = new HashMap<>();
 
     // Costruttore della finestra di simulazione
-    public SimulationScreen(Stage mainStage) throws SQLException {
+    public SimulationScreen() throws SQLException {
         this.setTitle("Simulazione di una serata di lavoro");
 
         // Recupera i camerieri dal database e crea i tavoli
@@ -63,7 +63,7 @@ public class SimulationScreen extends Stage {
         root.setBottom(summaryScrollPane);
         BorderPane.setMargin(summaryScrollPane, new Insets(10));
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 800);
         this.setScene(scene);
 
         // Gestione della chiusura della finestra
@@ -107,7 +107,7 @@ public class SimulationScreen extends Stage {
 
     // Ottiene le iniziali del nome e cognome di un cameriere
     private String getInitials(Waiter waiter) {
-        return waiter.getFirstName().substring(0, 1) + waiter.getLastName().substring(0, 1);
+        return waiter.firstName().charAt(0) + waiter.lastName().substring(0, 1);
     }
 
     // Recupera i camerieri dal database e li aggiunge alla lista
@@ -180,7 +180,7 @@ public class SimulationScreen extends Stage {
                         }
                     });
                 }
-            }, i * 3000);
+            }, i * 3000L);
         }
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -196,7 +196,7 @@ public class SimulationScreen extends Stage {
                     }
                 });
             }
-        }, numberOfWaiters * 3000, 5000);
+        }, numberOfWaiters * 3000L, 5000);
     }
     //assegna un cameriere ad un tavolo random
     private void assignWaiterToRandomTable(Waiter waiter) {
@@ -223,7 +223,7 @@ public class SimulationScreen extends Stage {
         int numItemsToOrder = random.nextInt(menuItems.size()) + 1;
         for (int i = 0; i < numItemsToOrder; i++) {
             MenuItem menuItem = menuItems.get(random.nextInt(menuItems.size()));
-            orders.add(new Order(menuItem.getMenuId(), menuItem.getName(), menuItem.getPrice()));
+            orders.add(new Order(menuItem.menuId(), menuItem.name(), menuItem.price()));
         }
 
         if (orders.size() > table.getNumberOfSeats()) {
@@ -359,7 +359,7 @@ public class SimulationScreen extends Stage {
     }
     //segna l'ordine preso in un log
     private void logOrderTaken(Waiter waiter, Table table, List<Order> orders) {
-        StringBuilder log = new StringBuilder("Il cameriere " + waiter.getFirstName() + " " + waiter.getLastName() +
+        StringBuilder log = new StringBuilder("Il cameriere " + waiter.firstName() + " " + waiter.lastName() +
                 " ha preso un ordine dal tavolo " + table.getTableId() + ":\n");
         for (Order order : orders) {
             log.append(String.format("\n- %s (x%d) - €%.2f", order.getDishName(), order.getQuantity(), order.getDishPrice()));
@@ -369,7 +369,7 @@ public class SimulationScreen extends Stage {
     }
     //segna l'ordine consegnato in un log
     private void logOrderDelivered(Waiter waiter, Table table) {
-        String log = "Il cameriere " + waiter.getFirstName() + " " + waiter.getLastName() +
+        String log = "Il cameriere " + waiter.firstName() + " " + waiter.lastName() +
                 " ha consegnato l'ordine al tavolo " + table.getTableId() + ".\n";
         addToSummaryBox(log);
         writeLogToFile(log);
@@ -385,6 +385,7 @@ public class SimulationScreen extends Stage {
     //scrive i log su un file
     private void writeLogToFile(String log) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("order_logs.txt"), true))) {
+
             writer.write(log);
             writer.newLine();
         } catch (IOException e) {

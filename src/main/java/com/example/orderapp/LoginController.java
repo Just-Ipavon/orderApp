@@ -6,8 +6,8 @@ import com.example.orderapp.classes.AuthStrategy;
 import com.example.orderapp.classes.UserSession;
 //Classe per il controllo del Login
 public class LoginController {
-    private AuthStrategy authStrategy;//Pattern Strategy
-    private DatabaseFacade dbFacade;//Pattern Facade
+    private final AuthStrategy authStrategy;//Pattern Strategy
+    private final DatabaseFacade dbFacade;//Pattern Facade
     //Costruttore
     public LoginController(AuthStrategy authStrategy) {
         this.authStrategy = authStrategy;

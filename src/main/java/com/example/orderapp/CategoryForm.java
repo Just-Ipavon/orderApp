@@ -3,7 +3,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,10 +19,10 @@ import java.sql.SQLException;
 
 public class CategoryForm extends Stage {
 
-    private TextField categoryNameField;
-    private ImageView categoryImageView;
+    private final TextField categoryNameField;
+    private final ImageView categoryImageView;
     private File selectedImageFile;
-    private DatabaseFacade dbFacade;//Pattern Facade per la connesstione al DB
+    private final DatabaseFacade dbFacade;//Pattern Facade per la connessione al DB
 
     //Classe per gestire il menu, mediante Categorie
     public CategoryForm() {

@@ -18,14 +18,14 @@ import javafx.stage.Stage;
 
 //Classe che implementa il form dei piatti - Menu
 public class DishForm extends Stage {
-    private TextField nameField;
-    private TextField descriptionField;
-    private TextField priceField;
-    private ImageView imageView;
+    private final TextField nameField;
+    private final TextField descriptionField;
+    private final TextField priceField;
+    private final ImageView imageView;
     private File imageFile;
     private final int categoryId;
     private final Integer dishId;
-    private DatabaseFacade dbFacade;
+    private final DatabaseFacade dbFacade;
     //Costruttore
     public DishForm(int categoryId, Integer dishId) {
         this.categoryId = categoryId;

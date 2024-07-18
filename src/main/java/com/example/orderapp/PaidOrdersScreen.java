@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 //Classe per visualizzare la classe degli ordini Pagati
 public class PaidOrdersScreen extends Stage {
-    private VBox mainLayout;
+    private final VBox mainLayout;
     private final CompleteOrderDAO orderDAO;
     private final DatabaseFacade databaseFacade = new DatabaseFacade();
     //Costruttore
@@ -56,17 +56,17 @@ public class PaidOrdersScreen extends Stage {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            showErrorAlert("Errore durante il caricamento degli ordini pagati", "Si è verificato un errore durante il caricamento degli ordini pagati. Per favore, riprova.");
+            showErrorAlert();
         } finally {
             databaseFacade.closeConnection();
         }
     }
     //Metodo che mostra un alert per gli errori
-    private void showErrorAlert(String title, String message) {
+    private void showErrorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
+        alert.setTitle("Errore durante il caricamento degli ordini pagati");
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText("Si è verificato un errore durante il caricamento degli ordini pagati. Per favore, riprova.");
         alert.showAndWait();
     }
 }

@@ -445,3 +445,56 @@ Il cameriere Marco Rossi ha preso un ordine dal tavolo 14:
 - Peroni (x1) - €3,00
 - Margherita (x1) - €4,00
 - ichnusa (x1) - €4,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 15:
+
+- Margherita (x1) - €4,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 14:
+
+- Peroni (x1) - €3,00
+- Margherita (x1) - €4,00
+- piadina kebab (x1) - €5,00
+- red velvet (x1) - €5,00
+- Capricciosa (x1) - €8,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 15.
+
+Il cameriere Pippo Esposito ha preso un ordine dal tavolo 3:
+
+- Cannelloni (x1) - €15,00
+- crispy (x1) - €8,90
+- Margherita (x1) - €4,00
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 14.
+
+Il cameriere Placeholder Espostio ha preso un ordine dal tavolo 12:
+
+- red velvet (x1) - €5,00
+- Cannelloni (x1) - €15,00
+- doppio cheeseburger (x1) - €10,00
+- cacio e pepe (x1) - €13,00
+- romagnola (x1) - €5,00
+Il cameriere Pippo Esposito ha consegnato l'ordine al tavolo 3.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 7:
+
+- doppio cheeseburger (x1) - €10,00
+- carbonara (x1) - €13,00
+- piadina kebab (x1) - €5,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 10:
+
+- cacio e pepe (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 7.
+
+Il cameriere Pippo Esposito ha preso un ordine dal tavolo 2:
+
+- cacio e pepe (x1) - €13,00
+- Peroni (x1) - €3,00
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 10.
+
+Il cameriere Pippo Esposito ha consegnato l'ordine al tavolo 2.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 3:
+
+- Cannelloni (x1) - €15,00
+- red velvet (x1) - €5,00
+- Diavola (x1) - €6,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 3.
+

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.example.orderapp.classes.Order;
 import com.example.orderapp.classes.UserSession;
@@ -28,11 +29,9 @@ import javafx.stage.Stage;
 //Classe del menù screen
 public class MenuScreen extends Stage {
     private final List<Order> orders = new ArrayList<>();
-    private final Stage mainStage;
     private final DatabaseFacade databaseFacade = new DatabaseFacade();
     //Costruttore
     public MenuScreen(Stage mainStage) {
-        this.mainStage = mainStage;
         this.setTitle("Menu del Ristorante");
         VBox mainLayout = new VBox();
         Parent root = this.createMenuUIFromDatabase();
@@ -116,10 +115,10 @@ public class MenuScreen extends Stage {
     private Image loadImage(String imagePathName) {
         String imagePath = "/assets/" + imagePathName;
         try {
-            return new Image(this.getClass().getResourceAsStream(imagePath));
+            return new Image(Objects.requireNonNull(this.getClass().getResourceAsStream(imagePath)));
         } catch (Exception e) {
             //Se ci sono problemi, impostiamo un'immagine "error"
-            return new Image(this.getClass().getResourceAsStream("/assets/error.png"));
+            return new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/assets/error.png")));
         }
     }
     //Metodo pre l'aggiunta del piatto all'ordine
