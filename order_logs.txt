@@ -103,3 +103,315 @@ Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 14.
 
 Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 1.
 
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 15:
+
+- ichnusa (x1) - €4,00
+- salutare (x1) - €5,00
+- Capricciosa (x1) - €8,00
+- Margherita (x1) - €4,00
+- salutare (x1) - €5,00
+- Margherita (x1) - €4,00
+- piadina kebab (x1) - €5,00
+- gelato (x1) - €2,50
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 11:
+
+- doppio cheeseburger (x1) - €10,00
+- Cannelloni (x1) - €15,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 15.
+
+Il cameriere Pippo Esposito ha preso un ordine dal tavolo 7:
+
+- Hamburger (x1) - €9,80
+- cheesecake (x1) - €5,00
+- cheesecake (x1) - €5,00
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 11.
+
+Il cameriere Placeholder Espostio ha preso un ordine dal tavolo 14:
+
+- Margherita (x1) - €4,00
+- The (x1) - €3,20
+- Peroni (x1) - €3,00
+Il cameriere Pippo Esposito ha consegnato l'ordine al tavolo 7.
+
+Il cameriere Domenico Vitobello ha preso un ordine dal tavolo 1:
+
+- Corona (x1) - €3,00
+- Cannelloni (x1) - €15,00
+- piadina kebab (x1) - €5,00
+- salutare (x1) - €5,00
+- gelato (x1) - €2,50
+- romagnola (x1) - €5,00
+Il cameriere Placeholder Espostio ha consegnato l'ordine al tavolo 14.
+
+Il cameriere Domenico Vitobello ha consegnato l'ordine al tavolo 1.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 3:
+
+- gelato (x1) - €2,50
+- carbonara (x1) - €13,00
+- gelato (x1) - €2,50
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 6:
+
+- Peroni (x1) - €3,00
+- romagnola (x1) - €5,00
+- ichnusa (x1) - €4,00
+- Bucatini alla amatriciana (x1) - €13,00
+- Cannelloni (x1) - €15,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 9:
+
+- crispy (x1) - €8,90
+- Sprite (x1) - €2,00
+- caffe (x1) - €1,00
+- red velvet (x1) - €5,00
+- Peroni (x1) - €3,00
+- gelato (x1) - €2,50
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 5:
+
+- Bucatini alla amatriciana (x1) - €13,00
+- salutare (x1) - €5,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 3.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 6.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 4:
+
+- cheesecake (x1) - €5,00
+- gelato (x1) - €2,50
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 9.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 5.
+
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 4.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 1:
+
+- Diavola (x1) - €6,00
+- cheesecake (x1) - €5,00
+- salutare (x1) - €5,00
+- piadina kebab (x1) - €5,00
+- crispy (x1) - €8,90
+- Bucatini alla amatriciana (x1) - €13,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 15:
+
+- crispy (x1) - €8,90
+- Hamburger (x1) - €9,80
+- carbonara (x1) - €13,00
+- crispy (x1) - €8,90
+- Peroni (x1) - €3,00
+- Bucatini alla amatriciana (x1) - €13,00
+- Cannelloni (x1) - €15,00
+- Corona (x1) - €3,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 3:
+
+- Margherita (x1) - €4,00
+- gelato (x1) - €2,50
+- carbonara (x1) - €13,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 10:
+
+- Corona (x1) - €3,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 1.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 15.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 14:
+
+- cheesecake (x1) - €5,00
+- crispy (x1) - €8,90
+- Margherita (x1) - €4,00
+- gelato (x1) - €2,50
+- Cannelloni (x1) - €15,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 3.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 10.
+
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 14.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 1:
+
+- piadina kebab (x1) - €5,00
+- Cannelloni (x1) - €15,00
+- Diavola (x1) - €6,00
+- carbonara (x1) - €13,00
+- Margherita (x1) - €4,00
+- Peroni (x1) - €3,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 13:
+
+- romagnola (x1) - €5,00
+- Diavola (x1) - €6,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 11:
+
+- romagnola (x1) - €5,00
+- crispy (x1) - €8,90
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 3:
+
+- Sprite (x1) - €2,00
+- piadina kebab (x1) - €5,00
+- carbonara (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 1.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 13.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 10:
+
+- Hamburger (x1) - €9,80
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 11.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 3.
+
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 10.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 14:
+
+- gelato (x1) - €2,50
+- Corona (x1) - €3,00
+- carbonara (x1) - €13,00
+- The (x1) - €3,20
+- caffe (x1) - €1,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 9:
+
+- caffe (x1) - €1,00
+- piadina kebab (x1) - €5,00
+- ichnusa (x1) - €4,00
+- salutare (x1) - €5,00
+- cacio e pepe (x1) - €13,00
+- Bucatini alla amatriciana (x1) - €13,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 15:
+
+- cacio e pepe (x1) - €13,00
+- The (x1) - €3,20
+- cacio e pepe (x1) - €13,00
+- piadina kebab (x1) - €5,00
+- romagnola (x1) - €5,00
+- Diavola (x1) - €6,00
+- cacio e pepe (x1) - €13,00
+- ichnusa (x1) - €4,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 6:
+
+- Diavola (x1) - €6,00
+- crispy (x1) - €8,90
+- Cannelloni (x1) - €15,00
+- The (x1) - €3,20
+- The (x1) - €3,20
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 14.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 9.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 7:
+
+- Hamburger (x1) - €9,80
+- Corona (x1) - €3,00
+- caffe (x1) - €1,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 9:
+
+- cheesecake (x1) - €5,00
+- red velvet (x1) - €5,00
+- crispy (x1) - €8,90
+- caffe (x1) - €1,00
+- doppio cheeseburger (x1) - €10,00
+- Bucatini alla amatriciana (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 7.
+
+Il cameriere Pippo Esposito ha preso un ordine dal tavolo 15:
+
+- piadina kebab (x1) - €5,00
+- piadina kebab (x1) - €5,00
+- cacio e pepe (x1) - €13,00
+- caffe (x1) - €1,00
+- Margherita (x1) - €4,00
+- Hamburger (x1) - €9,80
+- Corona (x1) - €3,00
+- cacio e pepe (x1) - €13,00
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 9.
+
+Il cameriere Placeholder Espostio ha preso un ordine dal tavolo 6:
+
+- cheesecake (x1) - €5,00
+- Peroni (x1) - €3,00
+- Margherita (x1) - €4,00
+- Cannelloni (x1) - €15,00
+- Peroni (x1) - €3,00
+Il cameriere Pippo Esposito ha consegnato l'ordine al tavolo 15.
+
+Il cameriere Domenico Vitobello ha preso un ordine dal tavolo 5:
+
+- Corona (x1) - €3,00
+- red velvet (x1) - €5,00
+Il cameriere Placeholder Espostio ha consegnato l'ordine al tavolo 6.
+
+Il cameriere Domenico Vitobello ha consegnato l'ordine al tavolo 5.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 11:
+
+- Corona (x1) - €3,00
+- salutare (x1) - €5,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 7:
+
+- The (x1) - €3,20
+- cheesecake (x1) - €5,00
+- Hamburger (x1) - €9,80
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 12:
+
+- Sprite (x1) - €2,00
+- ichnusa (x1) - €4,00
+- ichnusa (x1) - €4,00
+- crispy (x1) - €8,90
+- gelato (x1) - €2,50
+- salutare (x1) - €5,00
+- carbonara (x1) - €13,00
+- Cannelloni (x1) - €15,00
+- romagnola (x1) - €5,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 13:
+
+- Hamburger (x1) - €9,80
+- Bucatini alla amatriciana (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 11.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 7.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 2:
+
+- salutare (x1) - €5,00
+- piadina kebab (x1) - €5,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 12.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 13.
+
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 2.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 10:
+
+- Margherita (x1) - €4,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 9:
+
+- doppio cheeseburger (x1) - €10,00
+- Diavola (x1) - €6,00
+- romagnola (x1) - €5,00
+- Margherita (x1) - €4,00
+- Diavola (x1) - €6,00
+- Corona (x1) - €3,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 14:
+
+- Margherita (x1) - €4,00
+- cacio e pepe (x1) - €13,00
+- Cannelloni (x1) - €15,00
+- gelato (x1) - €2,50
+- salutare (x1) - €5,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 13:
+
+- Sprite (x1) - €2,00
+- gelato (x1) - €2,50
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 10.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 9.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 7:
+
+- Hamburger (x1) - €9,80
+- romagnola (x1) - €5,00
+- cacio e pepe (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 14.
+
+Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 13.
+
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 7.
+

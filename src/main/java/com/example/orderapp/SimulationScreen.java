@@ -6,12 +6,11 @@ import com.example.orderapp.classes.Order;
 import com.example.orderapp.classes.Waiter;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -21,8 +20,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
-        import java.util.*;
-        import java.util.concurrent.atomic.AtomicInteger;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulationScreen extends Stage {
     private final List<Table> tables = new ArrayList<>();
@@ -35,6 +36,8 @@ public class SimulationScreen extends Stage {
     private int numberOfWaiters;
     private final List<Waiter> waiters = new ArrayList<>();
     private boolean running = true;
+//    private final GridPane waiterGrid = new GridPane();
+//    private final Map<Waiter, Rectangle> waiterRectangles = new HashMap<>();
 
     public SimulationScreen(Stage mainStage) throws SQLException {
         this.setTitle("Simulazione di una serata di lavoro");
@@ -47,9 +50,12 @@ public class SimulationScreen extends Stage {
         grid.setVgap(10);
 
         setupSummaryScrollPane();
+        //setupWaiterGrid();
 
         BorderPane root = new BorderPane();
-        root.setCenter(grid);
+        VBox centerBox = new VBox(10);
+        //centerBox.getChildren().addAll(waiterGrid, grid);
+        root.setCenter(centerBox);
         root.setBottom(summaryScrollPane);
         BorderPane.setMargin(summaryScrollPane, new Insets(10));
 
@@ -72,6 +78,27 @@ public class SimulationScreen extends Stage {
         summaryBox.setPadding(new Insets(10));
         summaryBox.setFillWidth(true);
         summaryBox.setPrefWidth(760);
+    }
+
+//    private void setupWaiterGrid() {
+//        waiterGrid.setPadding(new Insets(10));
+//        waiterGrid.setHgap(10);
+//        waiterGrid.setVgap(10);
+//
+//        for (int i = 0; i < waiters.size(); i++) {
+//            Waiter waiter = waiters.get(i);
+//            Rectangle waiterRect = new Rectangle(30, 30);
+//            waiterRect.setFill(Color.RED);
+//            Label initials = new Label(getInitials(waiter));
+//            initials.setTextFill(Color.WHITE);
+//            StackPane waiterPane = new StackPane(waiterRect, initials);
+//            waiterGrid.add(waiterPane, i, 0);
+//            waiterRectangles.put(waiter, waiterRect);
+//        }
+//    }
+
+    private String getInitials(Waiter waiter) {
+        return waiter.getFirstName().substring(0, 1) + waiter.getLastName().substring(0, 1);
     }
 
     private int getWaitersFromDatabase() throws SQLException {
@@ -108,13 +135,16 @@ public class SimulationScreen extends Stage {
                 Table table = new Table(tableId, numberOfSeats);
                 tables.add(table);
 
-                Label label = new Label("Tavolo " + table.getTableId());
                 Rectangle rectangle = new Rectangle(100, 100);
-                rectangle.setFill(Color.RED); // Initially all tables are red
+                rectangle.setFill(Color.RED);
                 table.setRectangle(rectangle);
 
-                grid.add(label, index % 5, index / 5 * 2); // Position tables in a grid
-                grid.add(rectangle, index % 5, index / 5 * 2 + 1);
+                Label label = new Label("" + table.getTableId());
+                label.setTextFill(Color.WHITE);
+                StackPane tablePane = new StackPane(rectangle, label);
+                tablePane.setAlignment(Pos.CENTER);
+
+                grid.add(tablePane, index % 5, index / 5);
                 index++;
             }
             rs.close();
@@ -139,10 +169,9 @@ public class SimulationScreen extends Stage {
                         }
                     });
                 }
-            }, i * 3000); // Staggered start every 3 seconds
+            }, i * 3000);
         }
 
-        // Continue assigning waiters to tables every 5 seconds
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -156,7 +185,7 @@ public class SimulationScreen extends Stage {
                     }
                 });
             }
-        }, numberOfWaiters * 3000, 5000); // Start after all waiters have been initially assigned and then every 5 seconds
+        }, numberOfWaiters * 3000, 5000);
     }
 
     private void assignWaiterToRandomTable(Waiter waiter) {
@@ -170,6 +199,7 @@ public class SimulationScreen extends Stage {
         if (!availableTables.isEmpty() && activeOrders.get() < numberOfWaiters) {
             Table table = availableTables.get(random.nextInt(availableTables.size()));
             activeWaiters.incrementAndGet();
+            //waiterRectangles.get(waiter).setFill(Color.GREEN);
             placeRandomOrder(table, waiter);
         }
     }
@@ -179,43 +209,37 @@ public class SimulationScreen extends Stage {
         List<MenuItem> menuItems = getMenuItemsFromDatabase();
         List<Order> orders = new ArrayList<>();
 
-        // Randomly select a number of dishes to order
         int numItemsToOrder = random.nextInt(menuItems.size()) + 1;
         for (int i = 0; i < numItemsToOrder; i++) {
             MenuItem menuItem = menuItems.get(random.nextInt(menuItems.size()));
             orders.add(new Order(menuItem.getMenuId(), menuItem.getName(), menuItem.getPrice()));
         }
 
-        // Limit the number of orders to the number of seats at the table
         if (orders.size() > table.getNumberOfSeats()) {
             orders = orders.subList(0, table.getNumberOfSeats());
         }
 
-        // Change the table color to yellow
         table.getRectangle().setFill(Color.YELLOW);
-        activeOrders.incrementAndGet(); // Increment active orders count
+        activeOrders.incrementAndGet();
 
-        // Log the waiter taking the order
         logOrderTaken(waiter, table, orders);
 
-        // Wait 5 seconds to confirm the order
         List<Order> finalOrders = orders;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                    submitOrder(table.getTableId(), finalOrders);
+                    int orderId = submitOrder(table.getTableId(), finalOrders);
                     table.getRectangle().setFill(Color.GREEN);
-                    // Log the waiter delivering the order
                     logOrderDelivered(waiter, table);
 
-                    // Wait 10 seconds to proceed to payment
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
                             Platform.runLater(() -> {
-                                processPayment(table);
+                                processPayment(table, orderId, finalOrders);
                                 activeWaiters.decrementAndGet();
+                                //waiterRectangles.get(waiter).setFill(Color.RED);
                             });
                         }
                     }, 10000);
@@ -224,7 +248,9 @@ public class SimulationScreen extends Stage {
         }, 5000);
     }
 
-    private void submitOrder(int tableId, List<Order> orders) {
+
+    private int submitOrder(int tableId, List<Order> orders) {
+        int orderId = -1;
         try {
             databaseFacade.openConnection();
 
@@ -242,13 +268,13 @@ public class SimulationScreen extends Stage {
 
                 ResultSet generatedKeys = placedOrderStmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    int orderId = generatedKeys.getInt(1);
+                    orderId = generatedKeys.getInt(1);
 
                     for (Order order : orders) {
                         orderStmt.setInt(1, orderId);
                         orderStmt.setInt(2, order.getMenuId());
-                        orderStmt.setInt(3, 1); // Assuming quantity is always 1 for simplicity
-                        orderStmt.setString(4, ""); // No note for now
+                        orderStmt.setInt(3, 1);
+                        orderStmt.setString(4, "");
                         orderStmt.addBatch();
                     }
                     orderStmt.executeBatch();
@@ -260,11 +286,44 @@ public class SimulationScreen extends Stage {
         } finally {
             databaseFacade.closeConnection();
         }
+        return orderId;
     }
 
-    private void processPayment(Table table) {
-        activeOrders.decrementAndGet(); // Decrement active orders count
-        table.getRectangle().setFill(Color.RED); // Reset table color to red
+    private void processPayment(Table table, int orderId, List<Order> orders) {
+        activeOrders.decrementAndGet();
+        table.getRectangle().setFill(Color.RED);
+
+        double total = orders.stream().mapToDouble(Order::getDishPrice).sum();
+        String paymentMethod = new Random().nextBoolean() ? "Contanti" : "Carta";
+        double amountReceived = Math.ceil(total);
+
+        generateReceipt(orderId, paymentMethod, amountReceived, total);
+    }
+
+    private void generateReceipt(int orderId, String paymentMethod, double amountReceived, double total) {
+        String directoryPath = "receipts";
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        String fileName = directoryPath + File.separator + "receipt_" + orderId + ".txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("Ricevuta per l'ordine #" + orderId);
+            writer.newLine();
+            writer.write("Data: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            writer.newLine();
+            writer.write("Totale: €" + String.format("%.2f", total));
+            writer.newLine();
+            writer.write("Metodo di pagamento: " + paymentMethod);
+            writer.newLine();
+            writer.write("Importo ricevuto: €" + String.format("%.2f", amountReceived));
+            writer.newLine();
+            writer.write("Resto: €" + String.format("%.2f", amountReceived - total));
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<MenuItem> getMenuItemsFromDatabase() {

@@ -1,0 +1,6 @@
+Ricevuta per l'ordine #1576548594
+Data: 2024-07-18 15:22:58
+Totale: €4,50
+Metodo di pagamento: Carta
+Importo ricevuto: €5,00
+Resto: €0,50

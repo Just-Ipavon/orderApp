@@ -1,0 +1,6 @@
+Ricevuta per l'ordine #1576548585
+Data: 2024-07-18 15:22:25
+Totale: €8,00
+Metodo di pagamento: Contanti
+Importo ricevuto: €8,00
+Resto: €0,00
