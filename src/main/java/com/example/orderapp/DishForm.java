@@ -1,4 +1,9 @@
 package com.example.orderapp;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,14 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+//Classe che implementa il form dei piatti - Menu
 public class DishForm extends Stage {
-
     private TextField nameField;
     private TextField descriptionField;
     private TextField priceField;
@@ -27,33 +26,30 @@ public class DishForm extends Stage {
     private final int categoryId;
     private final Integer dishId;
     private DatabaseFacade dbFacade;
-
+    //Costruttore
     public DishForm(int categoryId, Integer dishId) {
         this.categoryId = categoryId;
         this.dishId = dishId;
         this.dbFacade = new DatabaseFacade();
         setTitle(dishId == null ? "Aggiungi Piatto" : "Modifica Piatto");
-
+        //Gestione dell'UI
         GridPane layout = new GridPane();
         layout.setPadding(new Insets(10));
         layout.setHgap(10);
         layout.setVgap(10);
-
+        //Label di ogni parametro di ciascun piatto
         Label nameLabel = new Label("Nome:");
         nameField = new TextField();
         layout.add(nameLabel, 0, 0);
         layout.add(nameField, 1, 0);
-
         Label descriptionLabel = new Label("Descrizione:");
         descriptionField = new TextField();
         layout.add(descriptionLabel, 0, 1);
         layout.add(descriptionField, 1, 1);
-
         Label priceLabel = new Label("Prezzo:");
         priceField = new TextField();
         layout.add(priceLabel, 0, 2);
         layout.add(priceField, 1, 2);
-
         Label imageLabel = new Label("Immagine:");
         imageView = new ImageView();
         imageView.setFitWidth(100);
@@ -63,7 +59,7 @@ public class DishForm extends Stage {
         layout.add(imageLabel, 0, 3);
         layout.add(imageView, 1, 3);
         layout.add(chooseImageButton, 2, 3);
-
+        //Button per le azioni sulle modifiche fatte
         Button applyButton = new Button("Applica");
         applyButton.setOnAction(e -> applyChanges());
         Button cancelButton = new Button("Annulla");
@@ -83,7 +79,7 @@ public class DishForm extends Stage {
         Scene scene = new Scene(layout, 400, 300);
         setScene(scene);
     }
-
+    //Metodo per selezionare l'immagine da scegliere
     private void chooseImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
@@ -92,13 +88,13 @@ public class DishForm extends Stage {
             imageView.setImage(new Image(imageFile.toURI().toString()));
         }
     }
-
+    //Metodo per applicare i cambiamenti fatti
     private void applyChanges() {
         String name = nameField.getText();
         String description = descriptionField.getText();
         double price = Double.parseDouble(priceField.getText());
         String imageName = imageFile != null ? imageFile.getName() : null;
-
+        //Gestione eccezioni
         try {
             dbFacade.openConnection();
             Connection conn = dbFacade.getConnection();
@@ -123,12 +119,10 @@ public class DishForm extends Stage {
                     pstmt.executeUpdate();
                 }
             }
-
             if (imageFile != null) {
                 File destFile = new File("com/example/progetto/images/" + imageFile.getName());
                 imageFile.renameTo(destFile);
             }
-
             close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,7 +130,7 @@ public class DishForm extends Stage {
             dbFacade.closeConnection();
         }
     }
-
+    //Metodo per eliminare un piatto dalla categoria
     private void deleteDish() {
         try {
             dbFacade.openConnection();
@@ -153,7 +147,7 @@ public class DishForm extends Stage {
             dbFacade.closeConnection();
         }
     }
-
+    //Metodo per avere i dettagli del piatto (i "parametri")
     private void loadDishDetails() {
         try {
             dbFacade.openConnection();

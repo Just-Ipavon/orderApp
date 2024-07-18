@@ -1,17 +1,4 @@
 package com.example.orderapp;
-
-import com.example.orderapp.classes.UserSession;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.geometry.Insets;
-import javafx.scene.layout.HBox;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,16 +9,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.example.orderapp.classes.UserSession;
+
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+//Classe per gestire le modifiche alla schermata del menù
 public class EditMenuScreen extends Stage {
     private final Stage mainStage;
     private final DatabaseFacade databaseFacade = new DatabaseFacade();
-
+    //Costruttore
     public EditMenuScreen(Stage mainStage) {
         this.mainStage = mainStage;
         setTitle("Modifica Menu");
         VBox mainLayout = new VBox();
-        mainLayout.getChildren().add(createMenuUIFromDatabase());
-
+        mainLayout.getChildren().add(createMenuUIFromDatabase()); //Riformo il menù dal DB
+        //Button per gestire le modifiche alla schermata
         Button addDishButton = new Button("Aggiungi Piatto");
         addDishButton.setOnAction(e -> {
             try {
@@ -41,80 +49,72 @@ public class EditMenuScreen extends Stage {
             }
         });
         mainLayout.getChildren().add(addDishButton);
-
         Button backButton = new Button("Torna al menù principale");
         backButton.setOnAction(e -> {
             this.close();
             new Main(UserSession.getInstance(null, null)).start(mainStage);
         });
         mainLayout.getChildren().add(backButton);
-
-        ScrollPane scrollPane = new ScrollPane(mainLayout);
+        ScrollPane scrollPane = new ScrollPane(mainLayout); //Schermata scrollabile per il menù
         scrollPane.setFitToWidth(true);
         Scene scene = new Scene(scrollPane, 1600, 900);
         setScene(scene);
     }
-
+    //Metodo per creare il Menù dal DB
     private Parent createMenuUIFromDatabase() {
         Accordion menuLayout = new Accordion();
-
+        //Gestione eccezioni
         try (Connection conn = databaseFacade.openConnection()) {
             String categoryQuery = "SELECT * FROM menu_categories";
             try (PreparedStatement pstmt = conn.prepareStatement(categoryQuery);
                  ResultSet categoryRS = pstmt.executeQuery()) {
-
+                //Itero sui risultati
                 while (categoryRS.next()) {
                     String categoryName = categoryRS.getString("category_name");
                     String categoryImagePathName = categoryRS.getString("category_image");
                     String categoryImagePath = "assets/" + categoryImagePathName;
-
                     Image categoryImage = loadImage(categoryImagePath);
                     ImageView categoryImageView = new ImageView(categoryImage);
                     categoryImageView.setFitWidth(100);
                     categoryImageView.setFitHeight(100);
-
                     VBox dishBox = new VBox();
                     dishBox.setPadding(new Insets(10));
                     dishBox.setSpacing(10);
                     TitledPane categoryPane = new TitledPane(categoryName, dishBox);
                     categoryPane.setGraphic(categoryImageView);
                     menuLayout.getPanes().add(categoryPane);
-
                     loadDishes(conn, categoryRS.getInt("category_id"), dishBox);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return menuLayout;
     }
-
+    //Metodo per caricare i piatti dal DB
     private void loadDishes(Connection conn, int categoryId, VBox dishBox) {
-        String dishQuery = "SELECT * FROM menus WHERE category_id = ?";
+        String dishQuery = "SELECT * FROM menus WHERE category_id = ?"; //Query
+        //Gestione eccezioni
         try (PreparedStatement dishStmt = conn.prepareStatement(dishQuery)) {
             dishStmt.setInt(1, categoryId);
             try (ResultSet dishRS = dishStmt.executeQuery()) {
+                //Itero sui result
                 while (dishRS.next()) {
                     String dishName = dishRS.getString("menu_name");
                     double dishPrice = dishRS.getDouble("menu_price");
                     String dishDescription = dishRS.getString("menu_description");
                     int menuId = dishRS.getInt("menu_id");
-
                     String imagePathName = dishRS.getString("menu_image");
                     String imagePath = "assets/" + imagePathName;
-
                     Image image = loadImage(imagePath);
                     ImageView imageView = new ImageView(image);
                     imageView.setFitWidth(100);
                     imageView.setFitHeight(100);
-
                     Label dishLabel = new Label(dishName + " - $" + dishPrice);
                     Label dishDescriptionLabel = new Label(dishDescription);
-
                     HBox dishButtons = new HBox();
                     dishButtons.setSpacing(10);
-
+                    //Button per gestire le modifiche fatte alla schermata
                     Button modifyButton = new Button("Modifica");
                     modifyButton.setOnAction(e -> {
                         try {
@@ -123,7 +123,6 @@ public class EditMenuScreen extends Stage {
                             throw new RuntimeException(ex);
                         }
                     });
-
                     Button deleteButton = new Button("Elimina");
                     deleteButton.setOnAction(e -> {
                         try {
@@ -133,9 +132,7 @@ public class EditMenuScreen extends Stage {
                             throw new RuntimeException(ex);
                         }
                     });
-
                     dishButtons.getChildren().addAll(modifyButton, deleteButton);
-
                     VBox dishDetails = new VBox();
                     dishDetails.getChildren().addAll(dishLabel, dishDescriptionLabel, imageView, dishButtons);
                     dishBox.getChildren().add(dishDetails);
@@ -145,7 +142,7 @@ public class EditMenuScreen extends Stage {
             e.printStackTrace();
         }
     }
-
+    //Metodo che ritorna l'immagine del piatto - Se vi è un errore, mettiamo l'immagine triangolare di errore
     private Image loadImage(String imagePath) {
         try {
             // Aggiungi un messaggio di debug per il percorso dell'immagine
@@ -258,8 +255,8 @@ public class EditMenuScreen extends Stage {
                 } else {
                     updateDish(conn, menuId, dishName, dishPrice, dishDescription, imagePath, categoryId);
                 }
-                dishFormStage.close();  // Close the form stage before refreshing
-                refreshScreen();  // Refresh the screen to reflect changes
+                dishFormStage.close();  // chiudi prima di aggiornre
+                refreshScreen();  // aggiorna per vedere i cambiamenti
             } catch (SQLException | IOException ex) {
                 ex.printStackTrace();
             }
@@ -306,7 +303,7 @@ public class EditMenuScreen extends Stage {
                 Files.copy(new File(imagePath).toPath(), new File(newImagePathTarget).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 pstmt.setString(4, imageFileName);
             } else {
-                // Keep the existing image if no new image is provided
+                // se non viene caricata un immagine lascia quella di prima
                 String existingImageQuery = "SELECT menu_image FROM menus WHERE menu_id = ?";
                 try (PreparedStatement existingImageStmt = conn.prepareStatement(existingImageQuery)) {
                     existingImageStmt.setInt(1, menuId);

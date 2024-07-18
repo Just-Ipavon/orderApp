@@ -23,8 +23,9 @@ public class CategoryForm extends Stage {
     private TextField categoryNameField;
     private ImageView categoryImageView;
     private File selectedImageFile;
-    private DatabaseFacade dbFacade;
+    private DatabaseFacade dbFacade;//Pattern Facade per la connesstione al DB
 
+    //Classe per gestire il menu, mediante Categorie
     public CategoryForm() {
 
         setTitle("Aggiungi/Modifica Categoria");
@@ -33,10 +34,10 @@ public class CategoryForm extends Stage {
         BorderPane mainLayout = new BorderPane();
         VBox formLayout = new VBox(10);
         formLayout.setPadding(new Insets(10));
-
+        //Gestione dei campi del form
         categoryNameField = new TextField();
         categoryNameField.setPromptText("Nome Categoria");
-
+        //Sequenza di passi da compiere (immagine,nome,...)
         Button chooseImageButton = new Button("Scegli Immagine");
         chooseImageButton.setOnAction(e -> chooseImage());
 
@@ -56,11 +57,11 @@ public class CategoryForm extends Stage {
         formLayout.getChildren().addAll(categoryNameField, chooseImageButton, categoryImageView, buttonsLayout);
 
         mainLayout.setCenter(formLayout);
-
+        //Gestione della Scena effettiva da mostrare nell'UI
         Scene scene = new Scene(mainLayout, 400, 300);
         setScene(scene);
     }
-
+    //Scelta dell'immagine da mostrare
     private void chooseImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
@@ -70,7 +71,7 @@ public class CategoryForm extends Stage {
             categoryImageView.setImage(image);
         }
     }
-
+    //Function che applica i cambiamenti al form delle categorie
     private void applyChanges() {
         String categoryName = categoryNameField.getText();
         if (!categoryName.isEmpty() && selectedImageFile != null) {

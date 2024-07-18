@@ -36,25 +36,29 @@ public class SimulationScreen extends Stage {
     private int numberOfWaiters;
     private final List<Waiter> waiters = new ArrayList<>();
     private boolean running = true;
-//    private final GridPane waiterGrid = new GridPane();
-//    private final Map<Waiter, Rectangle> waiterRectangles = new HashMap<>();
+    private final GridPane waiterGrid = new GridPane();
+    private final Map<Waiter, Rectangle> waiterRectangles = new HashMap<>();
 
+    // Costruttore della finestra di simulazione
     public SimulationScreen(Stage mainStage) throws SQLException {
         this.setTitle("Simulazione di una serata di lavoro");
 
+        // Recupera i camerieri dal database e crea i tavoli
         this.numberOfWaiters = getWaitersFromDatabase();
         createTablesFromDatabase();
 
+        // Impostazioni della griglia dei tavoli e del riepilogo
         grid.setPadding(new Insets(10));
         grid.setHgap(10);
         grid.setVgap(10);
 
         setupSummaryScrollPane();
-        //setupWaiterGrid();
+        setupWaiterGrid();
 
+        // Layout della finestra principale
         BorderPane root = new BorderPane();
         VBox centerBox = new VBox(10);
-        //centerBox.getChildren().addAll(waiterGrid, grid);
+        centerBox.getChildren().addAll(waiterGrid, grid);
         root.setCenter(centerBox);
         root.setBottom(summaryScrollPane);
         BorderPane.setMargin(summaryScrollPane, new Insets(10));
@@ -62,11 +66,14 @@ public class SimulationScreen extends Stage {
         Scene scene = new Scene(root, 800, 600);
         this.setScene(scene);
 
+        // Gestione della chiusura della finestra
         this.setOnCloseRequest(event -> running = false);
 
+        // Avvia la simulazione
         startSimulation();
     }
 
+    // Impostazioni dello scroll pane per il riepilogo degli eventi
     private void setupSummaryScrollPane() {
         summaryScrollPane.setContent(summaryBox);
         summaryScrollPane.setFitToWidth(true);
@@ -80,27 +87,30 @@ public class SimulationScreen extends Stage {
         summaryBox.setPrefWidth(760);
     }
 
-//    private void setupWaiterGrid() {
-//        waiterGrid.setPadding(new Insets(10));
-//        waiterGrid.setHgap(10);
-//        waiterGrid.setVgap(10);
-//
-//        for (int i = 0; i < waiters.size(); i++) {
-//            Waiter waiter = waiters.get(i);
-//            Rectangle waiterRect = new Rectangle(30, 30);
-//            waiterRect.setFill(Color.RED);
-//            Label initials = new Label(getInitials(waiter));
-//            initials.setTextFill(Color.WHITE);
-//            StackPane waiterPane = new StackPane(waiterRect, initials);
-//            waiterGrid.add(waiterPane, i, 0);
-//            waiterRectangles.put(waiter, waiterRect);
-//        }
-//    }
+    // Impostazioni della griglia per visualizzare i camerieri
+    private void setupWaiterGrid() {
+        waiterGrid.setPadding(new Insets(10));
+        waiterGrid.setHgap(10);
+        waiterGrid.setVgap(10);
 
+        for (int i = 0; i < waiters.size(); i++) {
+            Waiter waiter = waiters.get(i);
+            Rectangle waiterRect = new Rectangle(30, 30);
+            waiterRect.setFill(Color.RED);
+            Label initials = new Label(getInitials(waiter));
+            initials.setTextFill(Color.WHITE);
+            StackPane waiterPane = new StackPane(waiterRect, initials);
+            waiterGrid.add(waiterPane, i, 0);
+            waiterRectangles.put(waiter, waiterRect);
+        }
+    }
+
+    // Ottiene le iniziali del nome e cognome di un cameriere
     private String getInitials(Waiter waiter) {
         return waiter.getFirstName().substring(0, 1) + waiter.getLastName().substring(0, 1);
     }
 
+    // Recupera i camerieri dal database e li aggiunge alla lista
     private int getWaitersFromDatabase() throws SQLException {
         int waiterCount = 0;
         databaseFacade.openConnection();
@@ -123,6 +133,7 @@ public class SimulationScreen extends Stage {
         return waiterCount;
     }
 
+    // Crea i tavoli dalla base di dati e li aggiunge alla lista
     private void createTablesFromDatabase() throws SQLException {
         databaseFacade.openConnection();
         try {
@@ -154,7 +165,7 @@ public class SimulationScreen extends Stage {
             databaseFacade.closeConnection();
         }
     }
-
+    //fa iniziare la simulazione
     private void startSimulation() {
         Timer timer = new Timer();
 
@@ -187,7 +198,7 @@ public class SimulationScreen extends Stage {
             }
         }, numberOfWaiters * 3000, 5000);
     }
-
+    //assegna un cameriere ad un tavolo random
     private void assignWaiterToRandomTable(Waiter waiter) {
         Random random = new Random();
         List<Table> availableTables = new ArrayList<>();
@@ -199,11 +210,11 @@ public class SimulationScreen extends Stage {
         if (!availableTables.isEmpty() && activeOrders.get() < numberOfWaiters) {
             Table table = availableTables.get(random.nextInt(availableTables.size()));
             activeWaiters.incrementAndGet();
-            //waiterRectangles.get(waiter).setFill(Color.GREEN);
+            waiterRectangles.get(waiter).setFill(Color.GREEN);
             placeRandomOrder(table, waiter);
         }
     }
-
+    //genera un ordine random
     private void placeRandomOrder(Table table, Waiter waiter) {
         Random random = new Random();
         List<MenuItem> menuItems = getMenuItemsFromDatabase();
@@ -239,7 +250,7 @@ public class SimulationScreen extends Stage {
                             Platform.runLater(() -> {
                                 processPayment(table, orderId, finalOrders);
                                 activeWaiters.decrementAndGet();
-                                //waiterRectangles.get(waiter).setFill(Color.RED);
+                                waiterRectangles.get(waiter).setFill(Color.RED);
                             });
                         }
                     }, 10000);
@@ -248,7 +259,7 @@ public class SimulationScreen extends Stage {
         }, 5000);
     }
 
-
+    // Invia l'ordine al database
     private int submitOrder(int tableId, List<Order> orders) {
         int orderId = -1;
         try {
@@ -288,7 +299,7 @@ public class SimulationScreen extends Stage {
         }
         return orderId;
     }
-
+    //processa il pagamento
     private void processPayment(Table table, int orderId, List<Order> orders) {
         activeOrders.decrementAndGet();
         table.getRectangle().setFill(Color.RED);
@@ -299,7 +310,7 @@ public class SimulationScreen extends Stage {
 
         generateReceipt(orderId, paymentMethod, amountReceived, total);
     }
-
+    //genera lo scontrino
     private void generateReceipt(int orderId, String paymentMethod, double amountReceived, double total) {
         String directoryPath = "receipts";
         File directory = new File(directoryPath);
@@ -325,7 +336,7 @@ public class SimulationScreen extends Stage {
             e.printStackTrace();
         }
     }
-
+    //ottiene i piatti dal database
     private List<MenuItem> getMenuItemsFromDatabase() {
         List<MenuItem> menuItems = new ArrayList<>();
         try {
@@ -346,7 +357,7 @@ public class SimulationScreen extends Stage {
         }
         return menuItems;
     }
-
+    //segna l'ordine preso in un log
     private void logOrderTaken(Waiter waiter, Table table, List<Order> orders) {
         StringBuilder log = new StringBuilder("Il cameriere " + waiter.getFirstName() + " " + waiter.getLastName() +
                 " ha preso un ordine dal tavolo " + table.getTableId() + ":\n");
@@ -356,14 +367,14 @@ public class SimulationScreen extends Stage {
         addToSummaryBox(log.toString());
         writeLogToFile(log.toString());
     }
-
+    //segna l'ordine consegnato in un log
     private void logOrderDelivered(Waiter waiter, Table table) {
         String log = "Il cameriere " + waiter.getFirstName() + " " + waiter.getLastName() +
                 " ha consegnato l'ordine al tavolo " + table.getTableId() + ".\n";
         addToSummaryBox(log);
         writeLogToFile(log);
     }
-
+    //genera una sezione con i log
     private void addToSummaryBox(String text) {
         Label logLabel = new Label(text);
         logLabel.setWrapText(true);
@@ -371,7 +382,7 @@ public class SimulationScreen extends Stage {
         summaryBox.layout();
         summaryScrollPane.setVvalue(1.0);
     }
-
+    //scrive i log su un file
     private void writeLogToFile(String log) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("order_logs.txt"), true))) {
             writer.write(log);

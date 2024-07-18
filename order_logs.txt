@@ -415,3 +415,33 @@ Il cameriere Aniello Genovese ha consegnato l'ordine al tavolo 13.
 
 Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 7.
 
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 12:
+
+- Diavola (x1) - €6,00
+- romagnola (x1) - €5,00
+- crispy (x1) - €8,90
+- Capricciosa (x1) - €8,00
+- caffe (x1) - €1,00
+- Capricciosa (x1) - €8,00
+- Hamburger (x1) - €9,80
+- caffe (x1) - €1,00
+- Sprite (x1) - €2,00
+- Corona (x1) - €3,00
+Il cameriere Aniello Genovese ha preso un ordine dal tavolo 14:
+
+- Corona (x1) - €3,00
+- Bucatini alla amatriciana (x1) - €13,00
+Il cameriere Marco Rossi ha consegnato l'ordine al tavolo 12.
+
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 1:
+
+- romagnola (x1) - €5,00
+- red velvet (x1) - €5,00
+- romagnola (x1) - €5,00
+Il cameriere Marco Rossi ha preso un ordine dal tavolo 14:
+
+- Bucatini alla amatriciana (x1) - €13,00
+- Cannelloni (x1) - €15,00
+- Peroni (x1) - €3,00
+- Margherita (x1) - €4,00
+- ichnusa (x1) - €4,00

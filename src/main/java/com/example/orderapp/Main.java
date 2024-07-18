@@ -1,49 +1,43 @@
 package com.example.orderapp;
-
 import com.example.orderapp.classes.UserSession;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+//Classe (secondaria) main dell'app
 public class Main extends Application {
-
     private UserSession userSession;
-
+    //Metodo Main secondario - senza parametri
     public Main() {
         this.userSession = UserSession.getInstance();
     }
-
+    //Metodo Main secondario - con parametro UserSession
     public Main(UserSession userSession) {
         this.userSession = userSession;
     }
-
+    //Metodo Start del Main - Costruisce l'App dopo il Login
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Ristorante");
-
-        // Create buttons
+        //Crea lo Stage iniziale dell'app con tutte le possibili azioni
         Button btnMenu = new Button("Menù dei piatti");
         Button btnOrdini = new Button("Ordinazioni");
         Button btnLogout = new Button("Logout");
         Button btnModificaMenu = new Button("Modifica Menu");
         Button btnUtenti = new Button("Utenti registrati");
         Button btnSimulazione = new Button("Simulazione");
-
-        // Create layout
         VBox mainButtonsLayout = new VBox(10);
         mainButtonsLayout.getChildren().addAll(btnMenu, btnOrdini);
-
-        // Check if user is admin
+        //Controllo sulla session
         if (userSession.isAdmin()) {
+            //Aggiungo i button corrispondenti all'admin
             mainButtonsLayout.getChildren().addAll(btnModificaMenu, btnUtenti);
         }
-
         VBox layout = new VBox(10);
         layout.getChildren().addAll(mainButtonsLayout, btnSimulazione, btnLogout);
-
-        // Logout logic
+        //Logica dei button
         btnLogout.setOnAction(e -> {
             userSession.cleanUserSession(); // Reset the session
             primaryStage.close();
@@ -53,8 +47,6 @@ public class Main extends Application {
                 ex.printStackTrace();
             }
         });
-
-        // "Menù dei piatti" button logic
         btnMenu.setOnAction(e -> {
             try {
                 new RestaurantMenuApp().start(primaryStage);
@@ -62,8 +54,6 @@ public class Main extends Application {
                 ex.printStackTrace();
             }
         });
-
-        // "Ordinazioni" button logic
         btnOrdini.setOnAction(e -> {
             try {
                 new OrdersScreen(primaryStage).show();
@@ -71,8 +61,6 @@ public class Main extends Application {
                 ex.printStackTrace();
             }
         });
-
-        // "Modifica Menu" button logic
         btnModificaMenu.setOnAction(e -> {
             try {
                 new EditMenuScreen(primaryStage).show();
@@ -80,17 +68,14 @@ public class Main extends Application {
                 ex.printStackTrace();
             }
         });
-
-        // "Utenti registrati" button logic
         btnUtenti.setOnAction(e -> {
             try {
-                new UsersScreen(userSession.isAdmin()).show(); // Pass if the user is admin
+                new UsersScreen(userSession.isAdmin()).show(); // se l'user è admin
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-
-        // "Simulazione" button logic
+        // pulsante "Simulazione" logica
         btnSimulazione.setOnAction(e -> {
             try {
                 new SimulationScreen(primaryStage).show();
