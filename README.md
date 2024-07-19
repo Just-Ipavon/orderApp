@@ -49,7 +49,6 @@ L'ordinazione viene effettuata scegliendo un piatto dal menù, *potendo inserire
 
 Ciascun utente del DB è contrassegnato da una flag *Waiter* o *Admin*, e ha il proprio accesso.
 Durante tutta l'implementazione del progetto, sono stati usati *sei* Design Patterns, ed è stata seguita la logica dei principi **SOLID**:
-
     - Strategy : Permette di effettuare l'azione richiesta facendo la scelta più opportuna (*Payment*, *Login*)
     - Decorator : Permette di aggiungere funzionalità agli oggetti senza modificarne la struttura (*Order*)
     - Observer : Relazione 1:N fra oggetti in modo da notificare i cambiamenti di stato di un oggetto (*Order*, *Waiter*)
