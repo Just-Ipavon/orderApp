@@ -53,8 +53,8 @@ Durante tutta l'implementazione del progetto, sono stati usati *sei* Design Patt
     - Strategy : Permette di effettuare l'azione richiesta facendo la scelta più opportuna (*Payment*, *Login*)
     - Decorator : Permette di aggiungere funzionalità agli oggetti senza modificarne la struttura (*Order*)
     - Observer : Relazione 1:N fra oggetti in modo da notificare i cambiamenti di stato di un oggetto (*Order*, *Waiter*)
-    - Factory : Interfaccia che permette di creare oggetti in una superclasse, ma le sottoclassi possono alterarne il tipo (* *)
-    - DAO : Astrazione per l'accesso ai dati, separando Buiseness Logic e Dati (* *)
+    - Factory : Interfaccia che permette di creare oggetti in una superclasse, ma le sottoclassi possono alterarne il tipo (*Connection*)
+    - DAO : Astrazione per l'accesso ai dati, separando Buiseness Logic e Dati (*CompleteOrder*)
     - Facade : Fornisce un'interfaccia semplificata ad un insieme complesso di classi, librerie o framework (*Connection*)
 
 Inoltre, sono stati usati i ***record***, per gestire oggetti immutabili, possedendo *componenti* implicitamente dichiarati **final**, ed avere accesso rapido ai dati. Usati per evitare *boilerplate code*, ovvero codice ripetuto molte volte senza modifiche; i record permettono di evitare di ridefinire lo stesso codice varie volte, facendo direttamente riferimento ad una struttura dati immutabile.
