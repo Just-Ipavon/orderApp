@@ -70,7 +70,11 @@ Usati per evitare *boilerplate code*, ovvero codice ripetuto molte volte senza m
 3. buildare il progetto;
 4. eseguire il file LoginUI.java;
 5. utilizzare le credenziali utente: 
-    - Username: Ipavon
-    - Password: Ipavon
+    1. per l'accesso utente Admin:
+        - Username: Ipavon
+        - Password: Ipavon
+    2. per l'accesso da Cameriere:
+        - Username: Primo
+        - Password: Primo
 
 ---
