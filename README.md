@@ -62,3 +62,15 @@ Inoltre, sono stati usati i _**record**_, per gestire oggetti immutabili, possed
 Usati per evitare *boilerplate code*, ovvero codice ripetuto molte volte senza modifiche; i record permettono di evitare di ridefinire lo stesso codice varie volte, facendo direttamente riferimento ad una struttura dati immutabile.
 
 ---
+
+## **GUIDA PER ESEGUIRE IL PROGETTO**:
+
+1. Scaricare la repository da github;
+2. inizializzare il database con il file .sql all'interno della repository;
+3. buildare il progetto;
+4. eseguire il file LoginUI.java;
+5. utilizzare le credenziali utente: 
+    - Username: Ipavon
+    - Password: Ipavon
+
+---
