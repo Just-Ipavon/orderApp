@@ -97,7 +97,31 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (2,'Hamburger','panino con hamburger',9.80,'burgerone.jpg',1),(3,'gelato','cono gelato classico',2.50,'gelato.jpg',2),(5,'caffe','caffe amaro',1.00,'caffe.jpg',3),(6,'The','bevanda fredda',3.20,'tea.jpg',3),(7,'Bucatini alla amatriciana','bucatini con sugo guanciale e pecorino',13.00,'bucatini.jpg',4),(8,'Cannelloni','pasta ripiena di carne',15.00,'cannelloni.jpg',4),(9,'Margherita','pizza con mozzarella salsa e basilico',4.00,'margherita.jpg',5),(10,'Diavola','pizza con salame',6.00,'diavola.png',5),(11,'piadina kebab','piadina con kebab completo',5.00,'piadinakebab.jpeg',7),(12,'Sprite','bevanda gassata',2.00,'licensed-image.jpg',3),(13,'Cetara','pizza alici burrata pomodorini','cetara.jpg',5),(17,'Peroni','birra italiana',3.00,'peroni.jpg',6),(18,'Corona','birra bionda',3.00,'corona.jpg',6),(19,'ichnusa','birra sarda non filtrata',4.00,'ichnusa.jpg',6),(20,'cheesecake','torta con base biscottata e formaggio con marmellata ai frutti rossi',5.00,'cheesecake.jpg',2),(21,'red velvet','torta rossa con crema al burro',5.00,'redvelvet.jpg',2),(22,'doppio cheeseburger','hamburger con doppio hamburger',10.00,'cheeseburger.jpg',1),(23,'crispy','panino con il pollo',8.90,'crispy.jpg',1),(24,'carbonara','spaghetti con guanciale e uova',13.00,'carbonara.jpg',4),(25,'cacio e pepe','spaghetti con pecorino e pepe',13.00,'caciopepe.jpg',4),(26,'romagnola','piadina con bresaola',5.00,'romagnola.jpg',7),(27,'salutare','piadina con crudo',5.00,'salutare.jpeg',7),(28,'Capricciosa','Pizza',8.00,'capricciosa-pizza-napoletana-doc.jpg',5);
+INSERT INTO `menus` VALUES
+(2,'Hamburger','panino con hamburger',9.80,'burgerone.jpg',1),
+(3,'gelato','cono gelato classico',2.50,'gelato.jpg',2),
+(5,'caffe','caffe amaro',1.00,'caffe.jpg',3),
+(6,'The','bevanda fredda',3.20,'tea.jpg',3),
+(7,'Bucatini alla amatriciana','bucatini con sugo guanciale e pecorino',13.00,'bucatini.jpg',4),
+(8,'Cannelloni','pasta ripiena di carne',15.00,'cannelloni.jpg',4),
+(9,'Margherita','pizza con mozzarella salsa e basilico',4.00,'margherita.jpg',5),
+(10,'Diavola','pizza con salame',6.00,'diavola.png',5),
+(12,'piadina kebab','piadina con kebab completo',5.00,'piadinakebab.jpeg',7),
+(13,'Sprite','bevanda gassata',2.00,'licensed-image.jpg',3),
+(17,'Peroni','birra italiana',3.00,'peroni.jpg',6),
+(18,'Corona','birra bionda',3.00,'corona.jpg',6),
+(19,'ichnusa','birra sarda non filtrata',4.00,'ichnusa.jpg',6),
+(20,'cheesecake','torta con base biscottata e formaggio con marmellata ai frutti rossi',5.00,'cheesecake.jpg',2),
+(21,'red velvet','torta rossa con crema al burro',5.00,'redvelvet.jpg',2),
+(22,'doppio cheeseburger','hamburger con doppio hamburger',10.00,'cheeseburger.jpg',1),
+(23,'crispy','panino con il pollo',8.90,'crispy.jpg',1),
+(24,'carbonara','spaghetti con guanciale e uova',13.00,'carbonara.jpg',4),
+(25,'cacio e pepe','spaghetti con pecorino e pepe',13.00,'caciopepe.jpg',4),
+(26,'romagnola','piadina con bresaola',5.00,'romagnola.jpg',7),
+(27,'salutare','piadina con crudo',5.00,'salutare.jpeg',7),
+(28,'Capricciosa','Pizza',8.00,'capricciosa-pizza-napoletana-doc.jpg',5),
+(29,'Cetara','Pizza',7.99,'cetara.jpg',5),
+(30,'Pastamastra','sei pazzo',15,'arrabb.jpg',4);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
