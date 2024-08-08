@@ -10,7 +10,7 @@
 
 ---
 
-### Link Presentazione [CANVA](https://www.canva.com/design/DAGGsYUxV4U/bw9aB1-Ws4m5a5DG0E8pKA/view?utm_content=DAGGsYUxV4U&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+### Link Presentazione [CANVA](https://www.canva.com/design/DAGGsYUxV4U/bw9aB1-Ws4m5a5DG0E8pKA/view?utm_content=DAGGsYUxV4U&utm_campaign=designshare&utm_medium=link&utm_source=editor) (in alternativa c'è il file pdf caricato nella repository)
 
 ---
 
